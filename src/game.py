@@ -1,4 +1,5 @@
 from src.spritesheet import SpriteSheet
+from src.tilemap import TileMap
 from src.utils import *
 from src.data import *
 import pygame
@@ -15,6 +16,9 @@ class Game:
         self.clock: pygame.time.Clock = pygame.time.Clock()
         self.FPS: int = 60
 
+        self.tilemap: TileMap = TileMap()
+        self.tilemap.load(PATHS.MAPS / "level1.csv")
+
         pygame.display.set_caption(NAME)
 
     def update(self) -> None:
@@ -28,6 +32,8 @@ class Game:
 
     def draw(self) -> None:
         self.WIN.fill((30, 30, 30))
+
+        self.tilemap.draw(self.WIN)
 
         pygame.display.update()
 

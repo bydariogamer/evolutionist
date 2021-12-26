@@ -1,4 +1,5 @@
 # the data that the game will use
+from typing import Tuple
 from src.spritesheet import SpriteSheet
 import src.utils as utils
 from pathlib import Path
@@ -8,10 +9,15 @@ NAME: str = "Evolutionist"
 W: int = 1200
 H: int = 700
 
+TILE_SIZE: Tuple[int, int] = (64, 64)
+TL_W: int = TILE_SIZE[0]
+TL_H: int = TILE_SIZE[1]
+
 
 class PATHS:
     DATA: Path = Path(__file__).parent.parent / "data"
     SPRITESHEETS: Path = Path(__file__).parent.parent / "data" / "spritesheets"
+    MAPS: Path = Path(__file__).parent.parent / "data" / "maps"
 
 
 # preload the spritesheets to be less tedious
@@ -50,3 +56,13 @@ class SpriteSheets:
         right = sheet.clip(data["right"])
         topbottom = sheet.clip(data["topbottom"])
         leftright = sheet.clip(data["leftright"])
+
+        inbottomright = sheet.clip(data["inbottomright"])
+        inbottomleft = sheet.clip(data["inbottomleft"])
+        intopright = sheet.clip(data["intopright"])
+        intopleft = sheet.clip(data["intopleft"])
+
+        intopbottomright = sheet.clip(data["intopbottomright"])
+        inleftrightbottom = sheet.clip(data["inleftrightbottom"])
+        intopbottomleft = sheet.clip(data["intopbottomleft"])
+        inleftrighttop = sheet.clip(data["inleftrighttop"])

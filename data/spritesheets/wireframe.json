@@ -1,20 +1,30 @@
 {
-  "topleft":      [0 , 0 , 32, 32],
-  "midtop":       [32, 0 , 32, 32],
-  "topright":     [64, 0 , 32, 32],
-  "midright":     [64, 32, 32, 32],
-  "bottomright":  [64, 64, 32, 32],
-  "midbottom":    [32, 64, 32, 32],
-  "midleft":      [0 , 32, 32, 32],
-  "bottomleft":   [0 , 64, 32, 32],
-  "center":       [32, 32, 32, 32],
+  "topleft":            [0 , 0 , 32, 32],
+  "midtop":             [32, 0 , 32, 32],
+  "topright":           [64, 0 , 32, 32],
+  "midright":           [64, 32, 32, 32],
+  "bottomright":        [64, 64, 32, 32],
+  "midbottom":          [32, 64, 32, 32],
+  "bottomleft":         [0 , 64, 32, 32],
+  "midleft":            [0 , 32, 32, 32],
+  "center":             [32, 32, 32, 32],
 
-  "all":          [96, 96, 32, 32],
+  "all":                [96, 96, 32, 32],
 
-  "top":          [96,  0, 32, 32],
-  "bottom":       [96, 64, 32, 32],
-  "left":         [0 , 96, 32, 32],
-  "right":        [64, 96, 32, 32],
-  "topbottom":    [32, 96, 32, 32],
-  "leftright":    [96, 32, 32, 32]
+  "top":                [96,  0, 32, 32],
+  "bottom":             [96, 64, 32, 32],
+  "left":               [0 , 96, 32, 32],
+  "right":              [64, 96, 32, 32],
+  "topbottom":          [32, 96, 32, 32],
+  "leftright":          [96, 32, 32, 32],
+
+  "inbottomright":      [128, 0 , 32, 32],
+  "inbottomleft":       [160, 0 , 32, 32],
+  "intopright":         [128, 32, 32, 32],
+  "intopleft":          [160, 32, 32, 32],
+
+  "intopbottomright":   [128, 64, 32, 32],
+  "inleftrightbottom":  [160, 64, 32, 32],
+  "intopbottomleft":    [128, 96, 32, 32],
+  "inleftrighttop":     [160, 96, 32, 32]
 }

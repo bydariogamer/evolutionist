@@ -159,3 +159,12 @@ def load_json(path):
     with open(path, "r") as f:
         data = json.loads(f.read())
     return data
+
+
+def flatten(items):
+    for item in items:
+        if isinstance(item, list) or isinstance(item, tuple):
+            for subitem in flatten(item):
+                yield subitem
+        else:
+            yield item
