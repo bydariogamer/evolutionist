@@ -1,0 +1,8 @@
+{
+  "uranium":  [2, 0, 16, 17],
+  "uranium-display": [0, 17, 20, 28],
+  "californium": [20, 0, 16, 17],
+  "californium-display": [22, 17, 20, 28],
+  "thorium": [42, 0, 16, 17],
+  "thorium-display": [40, 17, 20, 28]
+}
