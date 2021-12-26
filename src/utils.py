@@ -1,5 +1,6 @@
 from typing import *
 import pygame
+import json
 import math
 import sys
 
@@ -152,3 +153,9 @@ def pixel_perfect_collision(image_1: pygame.surface.Surface, image_1_pos: Tuple[
     if result:
         return True
     return False
+
+
+def load_json(path):
+    with open(path, "r") as f:
+        data = json.loads(f.read())
+    return data

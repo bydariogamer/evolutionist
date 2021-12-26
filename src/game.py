@@ -1,3 +1,5 @@
+from src.spritesheet import SpriteSheet
+from src.utils import *
 from src.data import *
 import pygame
 import math
@@ -26,6 +28,7 @@ class Game:
 
     def draw(self) -> None:
         self.WIN.fill((30, 30, 30))
+
         pygame.display.update()
 
     def run(self) -> None:
