@@ -169,21 +169,26 @@ CODE: Dict[int, BaseTile] = {
 
 class TileMap:
     def __init__(self):
-        self.grid: Set[BaseTile] = set()
+        self.tiles: Set[BaseTile] = set()
 
     def load(self, path):
         with open(path, "r") as f:
+            self.tiles.clear()
             for i, ln in enumerate(reader(f)):
                 for j, l in enumerate(ln):
                     l = int(l)
                     if l not in CODE: continue
-                    self.grid.add(
+                    self.tiles.add(
                         CODE[l](j * TL_W, i * TL_H)
                     )
-            for tile in self.grid:
+            for tile in self.tiles:
                 tile.sprite = pygame.transform.scale(tile.sprite, TILE_SIZE)
 
     def draw(self, surface: pygame.surface.Surface) -> None:
         surface.blits(
-            [(tile.sprite, tile.rect) for tile in self.grid], False
+            ((tile.sprite, tile.rect) for tile in self.tiles), False
         )
+
+    def offset(self, off):
+        for tile in self.tiles:
+            tile.rect.move_ip(off)
