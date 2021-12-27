@@ -1,17 +1,20 @@
+from itertools import cycle
+from src.data import *
+from typing import *  # shush
 import pygame
 import math
 
 
 class Mob:
-    def __init__(self, pos, width, height, life, sprite_dict, initial_state):
+    def __init__(self, pos, width, height, life, animation_dict, initial_state):
         self.rect = pygame.Rect(pos[0], pos[1], width, height)
         self.life = life
-        self.sprite_dict = sprite_dict
+        self.animation_dict = animation_dict
         self.state = initial_state
         self.vel = pygame.Vector2(0)
 
     def draw(self, surface: pygame.Surface):
-        surface.blit(next(self.sprite_dict(self.state)), self.pos)
+        surface.blit(next(self.animation_dict[self.state]), self.pos)
 
     def update(self, dt):
         self.pos.x += self.vel.x * dt
@@ -63,48 +66,51 @@ class Monster(Mob):
 
 
 class Player(Mob):
-    JUMP_LIMIT = 2
-    JUMP_STRENGHT = 10
-    X_VEL_ACCELERATION = 1
-    X_VEL_LIMIT = 20
+    SPEED = 2
 
-    def __init__(self, pos, width, height, life, sprite_dict, initial_state):
+    def __init__(
+            self,
+            pos: pygame.math.Vector2,
+            width: int,
+            height: int,
+            life: int,
+            sprite_dict: dict,
+            initial_state: ...
+    ):
         super().__init__(pos, width, height, life, sprite_dict, initial_state)
-        self.jump_count = 0
 
-    def jump(self):
-        if self.jump_count >= self.JUMP_LIMIT:
+    def handle_keys(self, keys: Sequence[bool]):
+        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
+            self.state = "left"
+            self.vel.x = -self.SPEED
+        elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
+            self.state = "right"
+            self.vel.x = self.SPEED
+        elif keys[pygame.K_w] or keys[pygame.K_UP]:
+            self.state = "up"
+            self.vel.y = -self.SPEED
+        elif keys[pygame.K_s] or keys[pygame.K_DOWN]:
+            self.vel.y = self.SPEED
+
+    def update(self, tilemap: "TileMap", dt):
+        self.rect.x += self.vel.x * dt
+
+        if self.vel.x == 0 == self.vel.y:
+            self.state = "idle"
             return
-        self.vel.y += self.JUMP_STRENGHT
-        self.jump_count += 1
 
-    def move_right(self):
-        if self.vel.x < 0:  # if it is moving left
-            self.vel.x /= 2
-            self.vel.x += self.X_VEL_ACCELERATION
-        else:
-            self.vel.x += self.X_VEL_ACCELERATION * abs(1 - self.vel.x / self.X_VEL_LIMIT)
+        if self.vel.x != 0:
+            of = tilemap.offset
+            for (x, y) in tilemap.empty_tiles:
+                if self.rect.colliderect([x + of.x, y + of.y, *TILE_SIZE]):
+                    print(True)
+                    if self.vel.x > 0:  # moving right
+                        self.rect.x = x + of.x
+                    else:  # moving left
+                        self.rect.x = x + of.x + TL_W
+                    break
 
-    def move_left(self):
-        if self.vel.x > 0:  # if it is moving left
-            self.vel.x /= 2
-            self.vel.x -= self.X_VEL_ACCELERATION
-        else:
-            self.vel.x -= self.X_VEL_ACCELERATION * abs(1 - self.vel.x / self.X_VEL_LIMIT)
-
-    def handle_event(self, event):
-        if event.type == pygame.KEYDOWN:
-            if event.type == pygame.K_SPACE:
-                self.jump()
-
-    def update(self, dt):
-        self.pos.x += self.vel.x * dt
-        # todo: check collisions in X axis
-
-        self.pos.y += self.vel.y * dt
+        self.rect.y += self.vel.y * dt
         # todo: check collision in Y axis
 
-        """
-        if not ground_under_its_feet:
-        vel.y += some_gravity_value
-        """
+        self.vel *= 0

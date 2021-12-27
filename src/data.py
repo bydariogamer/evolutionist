@@ -16,6 +16,8 @@ TILE_SIZE: pygame.math.Vector2 = pygame.math.Vector2(64, 64)
 TL_W: int = int(TILE_SIZE[0])
 TL_H: int = int(TILE_SIZE[1])
 
+PLAYER_SIZE: Tuple[int, int] = (32, 32)
+
 
 class PATHS:
     DATA: Path = Path(__file__).parent.parent / "data"
@@ -25,9 +27,9 @@ class PATHS:
 
 class BaseAnimation:  # abstract class
     @classmethod
-    def get_animation(cls):
+    def get_animation(cls, repeat: int=1):
         return cycle([
-            getattr(cls, frame) for frame in dir(cls) if "frame" in frame
+            getattr(cls, frame) for frame in dir(cls) for _ in range(repeat) if "frame" in frame
         ])
 
 
@@ -83,14 +85,14 @@ class SpriteSheets:
             sheet = SpriteSheet(PATHS.SPRITESHEETS / "slime-green-right.png")
             data = utils.load_json(PATHS.SPRITESHEETS / "slime-green-right.json")
 
-            frame1 = sheet.clip(data["frames"]["1"])
-            frame2 = sheet.clip(data["frames"]["2"])
-            frame3 = sheet.clip(data["frames"]["3"])
-            frame4 = sheet.clip(data["frames"]["4"])
-            frame5 = sheet.clip(data["frames"]["5"])
-            frame6 = sheet.clip(data["frames"]["6"])
-            frame7 = sheet.clip(data["frames"]["7"])
-            frame8 = sheet.clip(data["frames"]["8"])
+            frame1 = pygame.transform.scale(sheet.clip(data["frames"]["1"]), PLAYER_SIZE)
+            frame2 = pygame.transform.scale(sheet.clip(data["frames"]["2"]), PLAYER_SIZE)
+            frame3 = pygame.transform.scale(sheet.clip(data["frames"]["3"]), PLAYER_SIZE)
+            frame4 = pygame.transform.scale(sheet.clip(data["frames"]["4"]), PLAYER_SIZE)
+            frame5 = pygame.transform.scale(sheet.clip(data["frames"]["5"]), PLAYER_SIZE)
+            frame6 = pygame.transform.scale(sheet.clip(data["frames"]["6"]), PLAYER_SIZE)
+            frame7 = pygame.transform.scale(sheet.clip(data["frames"]["7"]), PLAYER_SIZE)
+            frame8 = pygame.transform.scale(sheet.clip(data["frames"]["8"]), PLAYER_SIZE)
 
             animation = cycle([frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8])
 
@@ -98,14 +100,14 @@ class SpriteSheets:
             sheet = SpriteSheet(PATHS.SPRITESHEETS / "slime-green-right.png")
             data = utils.load_json(PATHS.SPRITESHEETS / "slime-green-right.json")
 
-            frame1 = pygame.transform.flip(sheet.clip(data["frames"]["1"]), True, False)
-            frame2 = pygame.transform.flip(sheet.clip(data["frames"]["2"]), True, False)
-            frame3 = pygame.transform.flip(sheet.clip(data["frames"]["3"]), True, False)
-            frame4 = pygame.transform.flip(sheet.clip(data["frames"]["4"]), True, False)
-            frame5 = pygame.transform.flip(sheet.clip(data["frames"]["5"]), True, False)
-            frame6 = pygame.transform.flip(sheet.clip(data["frames"]["6"]), True, False)
-            frame7 = pygame.transform.flip(sheet.clip(data["frames"]["7"]), True, False)
-            frame8 = pygame.transform.flip(sheet.clip(data["frames"]["8"]), True, False)
+            frame1 = pygame.transform.scale(pygame.transform.flip(sheet.clip(data["frames"]["1"]), True, False), PLAYER_SIZE)
+            frame2 = pygame.transform.scale(pygame.transform.flip(sheet.clip(data["frames"]["2"]), True, False), PLAYER_SIZE)
+            frame3 = pygame.transform.scale(pygame.transform.flip(sheet.clip(data["frames"]["3"]), True, False), PLAYER_SIZE)
+            frame4 = pygame.transform.scale(pygame.transform.flip(sheet.clip(data["frames"]["4"]), True, False), PLAYER_SIZE)
+            frame5 = pygame.transform.scale(pygame.transform.flip(sheet.clip(data["frames"]["5"]), True, False), PLAYER_SIZE)
+            frame6 = pygame.transform.scale(pygame.transform.flip(sheet.clip(data["frames"]["6"]), True, False), PLAYER_SIZE)
+            frame7 = pygame.transform.scale(pygame.transform.flip(sheet.clip(data["frames"]["7"]), True, False), PLAYER_SIZE)
+            frame8 = pygame.transform.scale(pygame.transform.flip(sheet.clip(data["frames"]["8"]), True, False), PLAYER_SIZE)
 
             animation = cycle([frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8])
 
@@ -113,12 +115,12 @@ class SpriteSheets:
             sheet = SpriteSheet(PATHS.SPRITESHEETS / "slime-green-up.png")
             data = utils.load_json(PATHS.SPRITESHEETS / "slime-green-up.json")
 
-            frame1 = sheet.clip(data["frames"]["1"])
-            frame2 = sheet.clip(data["frames"]["2"])
-            frame3 = sheet.clip(data["frames"]["3"])
-            frame4 = sheet.clip(data["frames"]["4"])
-            frame5 = sheet.clip(data["frames"]["5"])
-            frame6 = sheet.clip(data["frames"]["6"])
+            frame1 = pygame.transform.scale(sheet.clip(data["frames"]["1"]), PLAYER_SIZE)
+            frame2 = pygame.transform.scale(sheet.clip(data["frames"]["2"]), PLAYER_SIZE)
+            frame3 = pygame.transform.scale(sheet.clip(data["frames"]["3"]), PLAYER_SIZE)
+            frame4 = pygame.transform.scale(sheet.clip(data["frames"]["4"]), PLAYER_SIZE)
+            frame5 = pygame.transform.scale(sheet.clip(data["frames"]["5"]), PLAYER_SIZE)
+            frame6 = pygame.transform.scale(sheet.clip(data["frames"]["6"]), PLAYER_SIZE)
 
             animation = cycle([frame1, frame2, frame3, frame4, frame5, frame6])
 
@@ -126,11 +128,11 @@ class SpriteSheets:
             sheet = SpriteSheet(PATHS.SPRITESHEETS / "slime-green-idle.png")
             data = utils.load_json(PATHS.SPRITESHEETS / "slime-green-idle.json")
 
-            frame1 = sheet.clip(data["frames"]["1"])
-            frame2 = sheet.clip(data["frames"]["2"])
-            frame3 = sheet.clip(data["frames"]["3"])
-            frame4 = sheet.clip(data["frames"]["4"])
-            frame5 = sheet.clip(data["frames"]["5"])
-            frame6 = sheet.clip(data["frames"]["6"])
+            frame1 = pygame.transform.scale(sheet.clip(data["frames"]["1"]), PLAYER_SIZE)
+            frame2 = pygame.transform.scale(sheet.clip(data["frames"]["2"]), PLAYER_SIZE)
+            frame3 = pygame.transform.scale(sheet.clip(data["frames"]["3"]), PLAYER_SIZE)
+            frame4 = pygame.transform.scale(sheet.clip(data["frames"]["4"]), PLAYER_SIZE)
+            frame5 = pygame.transform.scale(sheet.clip(data["frames"]["5"]), PLAYER_SIZE)
+            frame6 = pygame.transform.scale(sheet.clip(data["frames"]["6"]), PLAYER_SIZE)
 
             animation = cycle([frame1, frame2, frame3, frame4, frame5, frame6])

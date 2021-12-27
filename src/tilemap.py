@@ -42,25 +42,29 @@ class TileMap(List[List[int]]):
         convert()
         super().__init__(*args, **kwargs)
         self.offset: pygame.math.Vector2 = pygame.math.Vector2()
+        self.empty_tiles: List[Tuple[int, int]] = []
 
     def load(self, path):
         with open(path, "r") as f:
             self.clear()
+            self.empty_tiles.clear()
             for i, ln in enumerate(CSVReader(f)):
                 self.append([])
                 for j, l in enumerate(ln):
                     l = int(l)
                     if l not in CODE:
                         l = None
+                        self.empty_tiles.append((j * TL_W, i * TL_H))  # x, y
                     self[~0].append(l)
 
     def draw(self, surface: pygame.surface.Surface) -> None:
         x, y = self.offset
         r = surface.get_rect()
         surface.blits(
-            [
-                (CODE[tile],
-                 [j*TL_W + x, i*TL_H + y]
+            (
+                (
+                    CODE[tile],
+                    [j*TL_W + x, i*TL_H + y]
                  ) for i, row in enumerate(self) for j, tile in enumerate(row)
-                if tile is not None and r.colliderect([j*TL_W + x, i*TL_H + y, *TILE_SIZE])], False
+                if tile is not None and r.colliderect([j*TL_W + x, i*TL_H + y, *TILE_SIZE])), False
         )

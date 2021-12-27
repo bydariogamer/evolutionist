@@ -1,4 +1,5 @@
 from src.tilemap import TileMap
+from src.mobs import *
 from src.utils import *
 from src.data import *
 import pygame
@@ -19,13 +20,26 @@ class Game:
         self.tilemap: TileMap = TileMap()
         self.tilemap.load(PATHS.MAPS / "level1.csv")
 
+        # pos, width, height, life, sprite_dict, initial_state
+        self.player: Player = Player(
+            pygame.math.Vector2(self.WIN.get_size())//2,
+            16, 16, 4, {
+                "up": SpriteSheets.GreenSlime.WalkUp.get_animation(repeat=10),
+                # "down": SpriteSheets.GreenSlime.WalkDown.get_animation(repeat=10),
+                "left": SpriteSheets.GreenSlime.WalkLeft.get_animation(repeat=10),
+                "right": SpriteSheets.GreenSlime.WalkRight.get_animation(repeat=10),
+                "idle": SpriteSheets.GreenSlime.Idle.get_animation(repeat=10)
+            },
+            "idle"
+        )
+
         self.last_time: float = time.time()  # bad
         self.dt: float = 0
 
         pygame.display.set_caption(NAME)
 
     def update(self) -> None:
-        pass
+        self.player.update(self.tilemap, self.dt)
 
     def event_handler(self) -> None:
         keys = pygame.key.get_pressed()
@@ -34,22 +48,13 @@ class Game:
                 pygame.quit()
                 sys.exit()
 
-        # basic world moving that can go in the player, dt is used cause slow
-        off = [0, 0]
-        if keys[pygame.K_w] or keys[pygame.K_UP]:
-            off[1] += 5 * self.dt
-        if keys[pygame.K_s] or keys[pygame.K_DOWN]:
-            off[1] -= 5 * self.dt
-        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
-            off[0] += 5 * self.dt
-        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-            off[0] -= 5 * self.dt
-        self.tilemap.offset += off
+        self.player.handle_keys(keys)
 
     def draw(self) -> None:
         self.WIN.fill((0, 0, 0))
 
         self.tilemap.draw(self.WIN)
+        self.player.draw(self.WIN)
 
         pygame.display.update()
 
