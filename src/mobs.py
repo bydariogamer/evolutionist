@@ -79,16 +79,20 @@ class Player(Mob):
         super().__init__(pos, *size, life, sprite_dict, initial_state)
 
     def handle_keys(self, keys: Sequence[bool]):
-        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
+        left = keys[pygame.K_a] or keys[pygame.K_LEFT]
+        right = keys[pygame.K_d] or keys[pygame.K_RIGHT]
+        up = keys[pygame.K_w] or keys[pygame.K_UP]
+        down = keys[pygame.K_s] or keys[pygame.K_DOWN]
+        if left and not (right or up or down):
             self.state = "left"
             self.vel.x = -self.SPEED
-        elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
+        elif right and not (left or up or down):
             self.state = "right"
             self.vel.x = self.SPEED
-        elif keys[pygame.K_w] or keys[pygame.K_UP]:
+        elif up and not (down or left or right):
             self.state = "up"
             self.vel.y = -self.SPEED
-        elif keys[pygame.K_s] or keys[pygame.K_DOWN]:
+        elif down and not (up or left or right):
             self.vel.y = self.SPEED
 
     def update(self, tilemap: "TileMap", dt):
