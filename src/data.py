@@ -1,8 +1,11 @@
 # the data that the game will use
 from typing import Tuple
+from itertools import cycle
 from src.spritesheet import SpriteSheet
 import src.utils as utils
 from pathlib import Path
+import pygame
+
 
 NAME: str = "Evolutionist"
 
@@ -18,6 +21,14 @@ class PATHS:
     DATA: Path = Path(__file__).parent.parent / "data"
     SPRITESHEETS: Path = Path(__file__).parent.parent / "data" / "spritesheets"
     MAPS: Path = Path(__file__).parent.parent / "data" / "maps"
+
+
+class BaseAnimation:  # abstract class
+    @classmethod
+    def get_animation(cls):
+        return cycle([
+            getattr(cls, frame) for frame in dir(cls) if "frame" in frame
+        ])
 
 
 # preload the spritesheets to be less tedious
@@ -66,3 +77,60 @@ class SpriteSheets:
         inleftrightbottom = sheet.clip(data["inleftrightbottom"])
         intopbottomleft = sheet.clip(data["intopbottomleft"])
         inleftrighttop = sheet.clip(data["inleftrighttop"])
+
+    class GreenSlime:
+        class WalkRight(BaseAnimation):
+            sheet = SpriteSheet(PATHS.SPRITESHEETS / "slime-green-right.png")
+            data = utils.load_json(PATHS.SPRITESHEETS / "slime-green-right.json")
+
+            frame1 = sheet.clip(data["frames"]["1"])
+            frame2 = sheet.clip(data["frames"]["2"])
+            frame3 = sheet.clip(data["frames"]["3"])
+            frame4 = sheet.clip(data["frames"]["4"])
+            frame5 = sheet.clip(data["frames"]["5"])
+            frame6 = sheet.clip(data["frames"]["6"])
+            frame7 = sheet.clip(data["frames"]["7"])
+            frame8 = sheet.clip(data["frames"]["8"])
+
+            animation = cycle([frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8])
+
+        class WalkLeft(BaseAnimation):
+            sheet = SpriteSheet(PATHS.SPRITESHEETS / "slime-green-right.png")
+            data = utils.load_json(PATHS.SPRITESHEETS / "slime-green-right.json")
+
+            frame1 = pygame.transform.flip(sheet.clip(data["frames"]["1"]), True, False)
+            frame2 = pygame.transform.flip(sheet.clip(data["frames"]["2"]), True, False)
+            frame3 = pygame.transform.flip(sheet.clip(data["frames"]["3"]), True, False)
+            frame4 = pygame.transform.flip(sheet.clip(data["frames"]["4"]), True, False)
+            frame5 = pygame.transform.flip(sheet.clip(data["frames"]["5"]), True, False)
+            frame6 = pygame.transform.flip(sheet.clip(data["frames"]["6"]), True, False)
+            frame7 = pygame.transform.flip(sheet.clip(data["frames"]["7"]), True, False)
+            frame8 = pygame.transform.flip(sheet.clip(data["frames"]["8"]), True, False)
+
+            animation = cycle([frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8])
+
+        class WalkUp(BaseAnimation):
+            sheet = SpriteSheet(PATHS.SPRITESHEETS / "slime-green-up.png")
+            data = utils.load_json(PATHS.SPRITESHEETS / "slime-green-up.json")
+
+            frame1 = sheet.clip(data["frames"]["1"])
+            frame2 = sheet.clip(data["frames"]["2"])
+            frame3 = sheet.clip(data["frames"]["3"])
+            frame4 = sheet.clip(data["frames"]["4"])
+            frame5 = sheet.clip(data["frames"]["5"])
+            frame6 = sheet.clip(data["frames"]["6"])
+
+            animation = cycle([frame1, frame2, frame3, frame4, frame5, frame6])
+
+        class Idle(BaseAnimation):
+            sheet = SpriteSheet(PATHS.SPRITESHEETS / "slime-green-idle.png")
+            data = utils.load_json(PATHS.SPRITESHEETS / "slime-green-idle.json")
+
+            frame1 = sheet.clip(data["frames"]["1"])
+            frame2 = sheet.clip(data["frames"]["2"])
+            frame3 = sheet.clip(data["frames"]["3"])
+            frame4 = sheet.clip(data["frames"]["4"])
+            frame5 = sheet.clip(data["frames"]["5"])
+            frame6 = sheet.clip(data["frames"]["6"])
+
+            animation = cycle([frame1, frame2, frame3, frame4, frame5, frame6])
