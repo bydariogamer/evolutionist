@@ -1,4 +1,3 @@
-from src.spritesheet import SpriteSheet
 from src.tilemap import TileMap
 from src.utils import *
 from src.data import *
@@ -45,7 +44,7 @@ class Game:
             off[0] += 5 * self.dt
         if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             off[0] -= 5 * self.dt
-        self.tilemap.offset(off)
+        self.tilemap.offset += off
 
     def draw(self) -> None:
         self.WIN.fill((0, 0, 0))

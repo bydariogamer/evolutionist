@@ -12,9 +12,9 @@ NAME: str = "Evolutionist"
 W: int = 1200
 H: int = 700
 
-TILE_SIZE: Tuple[int, int] = (64, 64)
-TL_W: int = TILE_SIZE[0]
-TL_H: int = TILE_SIZE[1]
+TILE_SIZE: pygame.math.Vector2 = pygame.math.Vector2(64, 64)
+TL_W: int = int(TILE_SIZE[0])
+TL_H: int = int(TILE_SIZE[1])
 
 
 class PATHS:
