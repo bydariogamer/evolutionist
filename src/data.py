@@ -136,3 +136,32 @@ class SpriteSheets:
             frame6 = pygame.transform.scale(sheet.clip(data["frames"]["6"]), PLAYER_SIZE)
 
             animation = cycle([frame1, frame2, frame3, frame4, frame5, frame6])
+
+    class Scientist:
+        class WalkRight(BaseAnimation):
+            sheet = SpriteSheet(PATHS.SPRITESHEETS / "scientist-running-right.png")
+            data = utils.load_json(PATHS.SPRITESHEETS / "scientist-running-right.json")
+
+            frame1 = pygame.transform.scale(sheet.clip(data["frames"]["1"]), PLAYER_SIZE)
+            frame2 = pygame.transform.scale(sheet.clip(data["frames"]["2"]), PLAYER_SIZE)
+            frame3 = pygame.transform.scale(sheet.clip(data["frames"]["3"]), PLAYER_SIZE)
+            frame4 = pygame.transform.scale(sheet.clip(data["frames"]["4"]), PLAYER_SIZE)
+            frame5 = pygame.transform.scale(sheet.clip(data["frames"]["5"]), PLAYER_SIZE)
+            frame6 = pygame.transform.scale(sheet.clip(data["frames"]["6"]), PLAYER_SIZE)
+            frame7 = pygame.transform.scale(sheet.clip(data["frames"]["7"]), PLAYER_SIZE)
+
+            animation = cycle([frame1, frame2, frame3, frame4, frame5, frame6, frame7])
+
+        class WalkLeft(BaseAnimation):
+            sheet = SpriteSheet(PATHS.SPRITESHEETS / "scientist-running-right.png")
+            data = utils.load_json(PATHS.SPRITESHEETS / "scientist-running-right.json")
+
+            frame1 = pygame.transform.scale(pygame.transform.flip(sheet.clip(data["frames"]["1"]), True, False), PLAYER_SIZE)
+            frame2 = pygame.transform.scale(pygame.transform.flip(sheet.clip(data["frames"]["2"]), True, False), PLAYER_SIZE)
+            frame3 = pygame.transform.scale(pygame.transform.flip(sheet.clip(data["frames"]["3"]), True, False), PLAYER_SIZE)
+            frame4 = pygame.transform.scale(pygame.transform.flip(sheet.clip(data["frames"]["4"]), True, False), PLAYER_SIZE)
+            frame5 = pygame.transform.scale(pygame.transform.flip(sheet.clip(data["frames"]["5"]), True, False), PLAYER_SIZE)
+            frame6 = pygame.transform.scale(pygame.transform.flip(sheet.clip(data["frames"]["6"]), True, False), PLAYER_SIZE)
+            frame7 = pygame.transform.scale(pygame.transform.flip(sheet.clip(data["frames"]["7"]), True, False), PLAYER_SIZE)
+
+            animation = cycle([frame1, frame2, frame3, frame4, frame5, frame6, frame7])
