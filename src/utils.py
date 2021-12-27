@@ -3,6 +3,8 @@ import pygame
 import json
 import math
 import sys
+import functools
+
 
 # colors have also alpha
 BLACK = (0, 0, 0, 255)
@@ -42,27 +44,33 @@ MIDBOTTOM = "midbottom"
 MIDRIGHT = "midright"
 
 
+@functools.lru_cache
 def load_image(path: str) -> pygame.surface.Surface:
     return pygame.image.load(path).convert()
 
 
+@functools.lru_cache
 def load_alpha_image(path: str) -> pygame.surface.Surface:
     return pygame.image.load(path).convert_alpha()
 
 
+@functools.lru_cache
 def resize_smooth_image(image: pygame.Surface, new_size: Tuple[int, int]) -> pygame.surface.Surface:
     return pygame.transform.smoothscale(image, new_size)
 
 
+@functools.lru_cache
 def resize_image(image: pygame.Surface, new_size: Tuple[int, int]) -> pygame.surface.Surface:
     return pygame.transform.scale(image, new_size)
 
 
+@functools.lru_cache
 def resize_image_ratio(image: pygame.Surface, new_size: Tuple[int, int]) -> pygame.surface.Surface:
     ratio = new_size[0] / image.get_width()
     return pygame.transform.scale(image, (math.floor(image.get_width() * ratio), math.floor(image.get_height() * ratio)))
 
 
+@functools.lru_cache
 def resizex(image: pygame.surface.Surface, amount: int or float) -> pygame.surface.Surface:
     w, h = image.get_width(), image.get_height()
     return pygame.transform.scale(image, (w*amount, h*amount))
@@ -89,6 +97,7 @@ def right_click(event: pygame.event.Event) -> bool:
     return False
 
 
+@functools.lru_cache
 def get_font(size, type_of_font="comicsans") -> pygame.font.Font:
     if type_of_font.endswith(".tff"):
         font = pygame.font.Font(
