@@ -66,7 +66,7 @@ class Monster(Mob):
 
 
 class Player(Mob):
-    SPEED = 2
+    SPEED = 5
 
     def __init__(
             self,
@@ -97,6 +97,12 @@ class Player(Mob):
 
     def update(self, tilemap: "TileMap", dt):
         self.rect.x += self.vel.x * dt
+        if self.rect.x >= W/6 * 5:
+            self.rect.x = W/6 * 5
+            tilemap.offset.x -= self.vel.x * dt
+        if self.rect.x <= W/6:
+            self.rect.x = W/6
+            tilemap.offset.x -= self.vel.x * dt
 
         if self.vel.x == 0 == self.vel.y:
             self.state = "idle"
@@ -113,6 +119,12 @@ class Player(Mob):
                     break
 
         self.rect.y += self.vel.y * dt
+        if self.rect.y >= H/6 * 5:
+            self.rect.y = H/6 * 5
+            tilemap.offset.y -= self.vel.y * dt
+        if self.rect.y <= H/6:
+            self.rect.y = H/6
+            tilemap.offset.y -= self.vel.y * dt
 
         if self.vel.y != 0:
             of = tilemap.offset
