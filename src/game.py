@@ -23,7 +23,7 @@ class Game:
         # pos, width, height, life, sprite_dict, initial_state
         self.player: Player = Player(
             pygame.math.Vector2(self.WIN.get_size())//2,
-            16, 16, 4, {
+            PLAYER_SIZE, 4, {
                 "up": SpriteSheets.GreenSlime.WalkUp.get_animation(repeat=10),
                 # "down": SpriteSheets.GreenSlime.WalkDown.get_animation(repeat=10),
                 "left": SpriteSheets.GreenSlime.WalkLeft.get_animation(repeat=10),

@@ -71,13 +71,12 @@ class Player(Mob):
     def __init__(
             self,
             pos: pygame.math.Vector2,
-            width: int,
-            height: int,
+            size: Tuple[int, int],
             life: int,
             sprite_dict: dict,
             initial_state: ...
     ):
-        super().__init__(pos, width, height, life, sprite_dict, initial_state)
+        super().__init__(pos, *size, life, sprite_dict, initial_state)
 
     def handle_keys(self, keys: Sequence[bool]):
         if keys[pygame.K_a] or keys[pygame.K_LEFT]:
@@ -103,14 +102,22 @@ class Player(Mob):
             of = tilemap.offset
             for (x, y) in tilemap.empty_tiles:
                 if self.rect.colliderect([x + of.x, y + of.y, *TILE_SIZE]):
-                    print(True)
                     if self.vel.x > 0:  # moving right
-                        self.rect.x = x + of.x
+                        self.rect.right = x + of.x
                     else:  # moving left
                         self.rect.x = x + of.x + TL_W
                     break
 
         self.rect.y += self.vel.y * dt
-        # todo: check collision in Y axis
+
+        if self.vel.y != 0:
+            of = tilemap.offset
+            for (x, y) in tilemap.empty_tiles:
+                if self.rect.colliderect([x + of.x, y + of.y, *TILE_SIZE]):
+                    if self.vel.y < 0:  # moving up
+                        self.rect.y = y + of.y + TL_H
+                    else:  # moving down
+                        self.rect.bottom = y + of.y
+                    break
 
         self.vel *= 0
