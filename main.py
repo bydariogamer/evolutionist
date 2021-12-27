@@ -1,4 +1,3 @@
-from src.game import Game
 import pygame
 
 
@@ -7,7 +6,11 @@ def run():
     pygame.font.init()
     pygame.display.init()
 
-    game = Game()
+    screen = pygame.display.set_mode((1200, 700))
+
+    from src.game import Game
+
+    game = Game(screen)
     game.run()
 
 

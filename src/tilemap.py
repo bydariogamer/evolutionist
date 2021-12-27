@@ -32,14 +32,8 @@ CODE: Dict[int, pygame.surface.Surface] = {
 }
 
 
-def convert():
-    for key, value in CODE.items():
-        CODE[key] = pygame.transform.scale(value, TILE_SIZE).convert()
-
-
 class TileMap(List[List[int]]):
     def __init__(self, *args, **kwargs):
-        convert()
         super().__init__(*args, **kwargs)
         self.offset: pygame.math.Vector2 = pygame.math.Vector2()
         self.empty_tiles: List[Tuple[int, int]] = []
@@ -66,5 +60,6 @@ class TileMap(List[List[int]]):
                     CODE[tile],
                     [j*TL_W + x, i*TL_H + y]
                  ) for i, row in enumerate(self) for j, tile in enumerate(row)
-                if tile is not None and r.colliderect([j*TL_W + x, i*TL_H + y, *TILE_SIZE])), False
+                if tile is not None and r.colliderect([j*TL_W + x, i*TL_H + y, *TILE_SIZE]))
+            , False
         )

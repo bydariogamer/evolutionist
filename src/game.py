@@ -10,8 +10,8 @@ import os
 
 
 class Game:
-    def __init__(self):
-        self.WIN: pygame.surface.Surface = pygame.display.set_mode((W, H))
+    def __init__(self, screen: pygame.surface.Surface):
+        self.WIN: pygame.surface.Surface = screen
 
         self.running: bool = True
         self.clock: pygame.time.Clock = pygame.time.Clock()
