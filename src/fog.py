@@ -39,33 +39,30 @@ class Fog(List[List[int]]):
             (i, j - 1),
             (i + 1, j),
             (i, j + 1),
-            (i - 1, j)
-        ]:
-            self[i][j] = 0
-        for [i, j] in [
-            (i, j - 2),
-            (i, j + 2),
-            (i - 2, j),
-            (i + 2, j),
-            (i + 1, j - 1),
+            (i - 1, j),
             (i + 1, j + 1),
+            (i + 1, j - 1),
+            (i - 1, j - 1),
             (i - 1, j + 1),
-            (i - 1, j - 1)
+            (i + 2, j),
+            (i - 2, j),
+            (i, j + 2),
+            (i, j - 2)
         ]:
-            if i in range(len(self)) and j in range(len(self[0])) and self[i][j] == 255:
-                self[i][j] = 63
+            if i in range(len(self)) and j in range(len(self[i])):
+                self[i][j] = 0
 
     def draw(self, surface: pygame.surface.Surface):
         x, y = self.offset
         r = surface.get_rect()
 
         surface.blits(
-            [
+            (
                 (
                     SURFACES[tile],
                     [j*TL_W + x, i*TL_H + y]
                  ) for i, row in enumerate(self) for j, tile in enumerate(row)
                 if tile and r.colliderect([j*TL_W + x, i*TL_H + y, *TILE_SIZE])
-            ]
+        )
             , False
         )
