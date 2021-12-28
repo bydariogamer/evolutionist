@@ -18,6 +18,8 @@ TL_H: int = int(TILE_SIZE[1])
 
 PLAYER_SIZE: Tuple[int, int] = (32, 32)
 
+ELEMENT_SIZE: Tuple[int, int] = (16, 16)
+
 
 class PATHS:
     DATA: Path = Path(__file__).parent.parent / "data"
@@ -39,11 +41,11 @@ class SpriteSheets:
         sheet = SpriteSheet(PATHS.SPRITESHEETS / "elements.png")
         data = utils.load_json(PATHS.SPRITESHEETS / "elements.json")
 
-        uranium = sheet.clip(data["uranium"]).convert()
+        uranium = sheet.clip(data["uranium"]).convert_alpha()
         uranium_display = sheet.clip(data["uranium-display"]).convert()
-        californium = sheet.clip(data["californium"]).convert()
+        californium = sheet.clip(data["californium"]).convert_alpha()
         californium_display = sheet.clip(data["californium-display"]).convert()
-        thorium = sheet.clip(data["thorium"]).convert()
+        thorium = sheet.clip(data["thorium"]).convert_alpha()
         thorium_display = sheet.clip(data["thorium-display"]).convert()
 
     class WireFrame:
