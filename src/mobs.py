@@ -96,17 +96,17 @@ class Player(Mob):
             self.vel.y = self.SPEED
 
     def update(self, tilemap: "TileMap", dt):
-        self.rect.x += self.vel.x * dt
-        if self.rect.x >= W/6 * 5:
-            self.rect.x = W/6 * 5
-            tilemap.offset.x -= self.vel.x * dt
-        if self.rect.x <= W/6:
-            self.rect.x = W/6
-            tilemap.offset.x -= self.vel.x * dt
-
         if self.vel.x == 0 == self.vel.y:
             self.state = "idle"
             return
+
+        xc = self.vel.x * dt  # changes
+        yc = self.vel.y * dt
+        ox = self.rect.x  # old position to calc displacement
+        oy = self.rect.y
+
+        # x axis
+        self.rect.x += xc
 
         if self.vel.x != 0:
             of = tilemap.offset
@@ -117,14 +117,12 @@ class Player(Mob):
                     else:  # moving left
                         self.rect.x = x + of.x + TL_W
                     break
+            displacement = self.rect.x - ox
+            self.rect.x = ox
+            tilemap.offset.x -= displacement
 
-        self.rect.y += self.vel.y * dt
-        if self.rect.y >= H/6 * 5:
-            self.rect.y = H/6 * 5
-            tilemap.offset.y -= self.vel.y * dt
-        if self.rect.y <= H/6:
-            self.rect.y = H/6
-            tilemap.offset.y -= self.vel.y * dt
+        # y axis
+        self.rect.y += yc
 
         if self.vel.y != 0:
             of = tilemap.offset
@@ -135,5 +133,8 @@ class Player(Mob):
                     else:  # moving down
                         self.rect.bottom = y + of.y
                     break
+            displacement = self.rect.y - oy
+            self.rect.y = oy
+            tilemap.offset.y -= displacement
 
         self.vel *= 0
