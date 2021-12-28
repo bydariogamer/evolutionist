@@ -17,8 +17,8 @@ TL_W: int = int(TILE_SIZE[0])
 TL_H: int = int(TILE_SIZE[1])
 
 PLAYER_SIZE: Tuple[int, int] = (32, 32)
-
 ELEMENT_SIZE: Tuple[int, int] = (16, 16)
+ELEMENT_DISPLAY_SIZE: Tuple[int, int] = (int(40 * 1.5), int(56 * 1.5))
 
 
 class PATHS:
@@ -41,12 +41,13 @@ class SpriteSheets:
         sheet = SpriteSheet(PATHS.SPRITESHEETS / "elements.png")
         data = utils.load_json(PATHS.SPRITESHEETS / "elements.json")
 
-        uranium = sheet.clip(data["uranium"]).convert_alpha()
-        uranium_display = sheet.clip(data["uranium-display"]).convert()
-        californium = sheet.clip(data["californium"]).convert_alpha()
-        californium_display = sheet.clip(data["californium-display"]).convert()
-        thorium = sheet.clip(data["thorium"]).convert_alpha()
-        thorium_display = sheet.clip(data["thorium-display"]).convert()
+        uranium = pygame.transform.scale(sheet.clip(data["uranium"]).convert_alpha(), ELEMENT_SIZE)
+        californium = pygame.transform.scale(sheet.clip(data["californium"]).convert_alpha(), ELEMENT_SIZE)
+        thorium = pygame.transform.scale(sheet.clip(data["thorium"]).convert_alpha(), ELEMENT_SIZE)
+
+        uranium_display = pygame.transform.scale(sheet.clip(data["uranium-display"]).convert(), ELEMENT_DISPLAY_SIZE)
+        californium_display = pygame.transform.scale(sheet.clip(data["californium-display"]).convert(), ELEMENT_DISPLAY_SIZE)
+        thorium_display = pygame.transform.scale(sheet.clip(data["thorium-display"]).convert(), ELEMENT_DISPLAY_SIZE)
 
     class WireFrame:
         sheet = SpriteSheet(PATHS.SPRITESHEETS / "wireframe.png")

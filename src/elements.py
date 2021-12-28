@@ -25,6 +25,42 @@ CODE = {
     6: SpriteSheets.Elements.thorium_display
 }
 
+s = SpriteSheet(PATHS.DATA / "pixelFontNumbers.png")
+h = 5
+font = {
+    0: s.clip([0 , 0, 4, h]).convert(),
+    1: s.clip([5 , 0, 2, h]).convert(),
+    2: s.clip([8 , 0, 3, h]).convert(),
+    3: s.clip([12, 0, 3, h]).convert(),
+    4: s.clip([16, 0, 3, h]).convert(),
+    5: s.clip([20, 0, 3, h]).convert(),
+    6: s.clip([24, 0, 3, h]).convert(),
+    7: s.clip([28, 0, 3, h]).convert(),
+    8: s.clip([32, 0, 3, h]).convert(),
+    9: s.clip([36, 0, 3, h]).convert()
+}
+
+
+class _d(Dict[int, pygame.surface.Surface]):
+    def __getitem__(self, n: int):
+        if n not in self:
+            if n > 9:
+                n1, n2 = str(n)
+                ns = pygame.surface.Surface((font[int(n1)].get_width() + 1 + font[int(n2)].get_width(), h))
+            else:
+                ns = pygame.surface.Surface((font[n].get_width(), h))
+            x = 0
+            ns.set_colorkey((255, 255, 255))
+            for ch in str(n):
+                ns.blit(font[int(ch)], (x, 0))
+                x += font[int(ch)].get_width() + 1 * 3.5
+            ns = pygame.transform.scale(ns, pygame.math.Vector2(ns.get_size()) * 3.5)
+            super().__setitem__(n, ns)
+        return super().__getitem__(n)
+
+
+NUMBER_CACHE = _d()
+
 
 class Elements(List[List[int]]):
     def from_tilemap(self, tilemap: tmx.TileMap):
@@ -82,3 +118,20 @@ class Elements(List[List[int]]):
                 j*TL_W + x + ELEMENT_SIZE[0] * 2 / 1.5, i*TL_H + y + ELEMENT_SIZE[1] * 2 / 1.5, *TILE_SIZE])
             ], False
         )
+
+        # dont say a word about my **awesome** code
+        x = [0]
+        for i in (2, 4):
+            x.append(CODE[i].get_width())
+        x[2] += x[1]
+        surface.blits(
+            (
+                (CODE[[2, 4, 6][i]],
+                 [x[i], H - CODE[[2, 4, 6][i]].get_height()])
+                for i in range(3)
+            ),
+            False
+        )
+        surface.blit(NUMBER_CACHE[self.uranium_count], (30, H - NUMBER_CACHE[self.uranium_count].get_height() - 7))
+        surface.blit(NUMBER_CACHE[self.californium_count], (95, H - NUMBER_CACHE[self.californium_count].get_height() - 7))
+        surface.blit(NUMBER_CACHE[self.thorium_count], (160, H - NUMBER_CACHE[self.thorium_count].get_height() - 7))
