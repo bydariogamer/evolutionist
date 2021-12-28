@@ -21,7 +21,8 @@ for v in SURFACES:
 
 
 class Fog(List[List[int]]):
-    def from_tilemap(self, tilemap):
+
+    def from_tilemap(self, tilemap: tm.TileMap):
         self.tm = tilemap
         self.clear()
         for row in self.tm:
@@ -32,7 +33,7 @@ class Fog(List[List[int]]):
         return self.tm.offset
 
     def update(self, player):
-        j, i = (int(x) for x in (pygame.math.Vector2(player.rect.topleft) - self.offset).elementwise() // TILE_SIZE)
+        j, i = (round(x) for x in (pygame.math.Vector2(player.rect.center) - self.offset).elementwise() // TILE_SIZE)
         self[i][j] = 0
         for [i, j] in [
             (i, j - 1),
@@ -51,7 +52,7 @@ class Fog(List[List[int]]):
             (i - 1, j + 1),
             (i - 1, j - 1)
         ]:
-            if self[i][j] == 255:
+            if i in range(len(self)) and j in range(len(self[0])) and self[i][j] == 255:
                 self[i][j] = 63
 
     def draw(self, surface: pygame.surface.Surface):
