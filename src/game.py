@@ -1,3 +1,4 @@
+from src.fog import *
 from src.tilemap import TileMap
 from src.mobs import *
 from src.utils import *
@@ -36,10 +37,14 @@ class Game:
         self.last_time: float = time.time()  # bad
         self.dt: float = 0
 
+        self.fog: Fog = Fog()
+        self.fog.from_tilemap(self.tilemap)
+
         pygame.display.set_caption(NAME)
 
     def update(self) -> None:
         self.player.update(self.tilemap, self.dt)
+        self.fog.update(self.player)
 
     def event_handler(self) -> None:
         keys = pygame.key.get_pressed()
@@ -55,6 +60,7 @@ class Game:
 
         self.tilemap.draw(self.WIN)
         self.player.draw(self.WIN)
+        self.fog.draw(self.WIN)
 
         pygame.display.update()
 
