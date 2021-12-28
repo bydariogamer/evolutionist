@@ -25,24 +25,22 @@ class Fog(List[List[int]]):
         self.tm = tilemap
         self.clear()
         for row in self.tm:
-            self.append([])
-            for tile in row:
-                self[~0].append(255)
+            self.append(len(row)*[255])
 
     @property
     def offset(self):
         return self.tm.offset
 
     def update(self, player):
-        j, i = (pygame.math.Vector2(player.rect.topleft) - self.offset).elementwise() // TILE_SIZE
-        self[int(i)][int(j)] = 0
+        j, i = (int(x) for x in (pygame.math.Vector2(player.rect.topleft) - self.offset).elementwise() // TILE_SIZE)
+        self[i][j] = 0
         for [i, j] in [
             (i, j - 1),
             (i + 1, j),
             (i, j + 1),
             (i - 1, j)
         ]:
-            self[int(i)][int(j)] = 0
+            self[i][j] = 0
         for [i, j] in [
             (i, j - 2),
             (i, j + 2),
@@ -53,8 +51,8 @@ class Fog(List[List[int]]):
             (i - 1, j + 1),
             (i - 1, j - 1)
         ]:
-            if self[int(i)][int(j)] == 255:
-                self[int(i)][int(j)] = 63
+            if self[i][j] == 255:
+                self[i][j] = 63
 
     def draw(self, surface: pygame.surface.Surface):
         x, y = self.offset
@@ -66,7 +64,7 @@ class Fog(List[List[int]]):
                     SURFACES[tile],
                     [j*TL_W + x, i*TL_H + y]
                  ) for i, row in enumerate(self) for j, tile in enumerate(row)
-                if tile is not None and r.colliderect([j*TL_W + x, i*TL_H + y, *TILE_SIZE])
+                if tile and r.colliderect([j*TL_W + x, i*TL_H + y, *TILE_SIZE])
             ]
             , False
         )
