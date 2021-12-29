@@ -104,7 +104,7 @@ class Elements(List[List[int]]):
                         self.thorium_count += 1
                     self[i][j] = -1
 
-    def draw(self, surface: pygame.surface.Surface):
+    def draw_elements(self, surface: pygame.surface.Surface):
         x, y = self.offset
         r = surface.get_rect()
 
@@ -119,6 +119,7 @@ class Elements(List[List[int]]):
             ], False
         )
 
+    def draw_labels(self, surface: pygame.surface.Surface):
         # dont say a word about my **awesome** code
         x = [0]
         for i in (2, 4):

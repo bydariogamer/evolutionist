@@ -65,8 +65,9 @@ class Game:
 
         self.tilemap.draw(self.WIN)
         self.player.draw(self.WIN)
-        self.elements.draw(self.WIN)
-        # self.fog.draw(self.WIN)
+        self.elements.draw_elements(self.WIN)
+        self.fog.draw(self.WIN)
+        self.elements.draw_labels(self.WIN)
 
         pygame.display.update()
 
