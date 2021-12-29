@@ -16,17 +16,33 @@ class Mob:
     def draw(self, surface: pygame.Surface):
         surface.blit(next(self.animation_dict[self.state]), self.pos)
 
-    def update(self, dt):
-        self.pos.x += self.vel.x * dt
-        # todo: check collisions in X axis
+    def update(self, tilemap: "TileMap", dt):
+        # changes
+        xc = self.vel.x * dt
+        yc = self.vel.y * dt
+        # old position to calc displacement
+        ox = self.rect.x
+        oy = self.rect.y
 
-        self.pos.y += self.vel.y * dt
-        # todo: check collision in Y axis
+        # x axis
+        self.rect.x += xc
 
-        """
-        if not ground_under_its_feet:
-        vel.y += some_gravity_value
-        """
+        if self.vel.x != 0:
+            of = tilemap.offset
+            for (x, y) in tilemap.empty_tiles:
+                if self.rect.colliderect([x + of.x, y + of.y, *TILE_SIZE]):
+                    self.rect.x = ox
+                    break
+
+        # y axis
+        self.rect.y += yc
+
+        if self.vel.y != 0:
+            of = tilemap.offset
+            for (x, y) in tilemap.empty_tiles:
+                if self.rect.colliderect([x + of.x, y + of.y, *TILE_SIZE]):
+                    self.rect.y = oy
+                    break
 
     def hurt(self, damage):
         self.life -= damage
@@ -100,41 +116,17 @@ class Player(Mob):
             self.state = "idle"
             return
 
-        xc = self.vel.x * dt  # changes
-        yc = self.vel.y * dt
-        ox = self.rect.x  # old position to calc displacement
+        ox = self.rect.x
         oy = self.rect.y
 
-        # x axis
-        self.rect.x += xc
+        super().update(tilemap, dt)
 
-        if self.vel.x != 0:
-            of = tilemap.offset
-            for (x, y) in tilemap.empty_tiles:
-                if self.rect.colliderect([x + of.x, y + of.y, *TILE_SIZE]):
-                    if self.vel.x > 0:  # moving right
-                        self.rect.right = x + of.x
-                    else:  # moving left
-                        self.rect.x = x + of.x + TL_W
-                    break
-            displacement = self.rect.x - ox
-            self.rect.x = ox
-            tilemap.offset.x -= displacement
+        displacement = self.rect.x - ox
+        self.rect.x = ox
+        tilemap.offset.x -= displacement
 
-        # y axis
-        self.rect.y += yc
-
-        if self.vel.y != 0:
-            of = tilemap.offset
-            for (x, y) in tilemap.empty_tiles:
-                if self.rect.colliderect([x + of.x, y + of.y, *TILE_SIZE]):
-                    if self.vel.y < 0:  # moving up
-                        self.rect.y = y + of.y + TL_H
-                    else:  # moving down
-                        self.rect.bottom = y + of.y
-                    break
-            displacement = self.rect.y - oy
-            self.rect.y = oy
-            tilemap.offset.y -= displacement
+        displacement = self.rect.y - oy
+        self.rect.y = oy
+        tilemap.offset.y -= displacement
 
         self.vel *= 0
