@@ -5,16 +5,16 @@ import pygame
 
 
 CODE: Dict[int, pygame.surface.Surface] = {
-    0 : SpriteSheets.WireFrame.topleft,
-    1 : SpriteSheets.WireFrame.midtop,
-    2 : SpriteSheets.WireFrame.topright,
-    3 : SpriteSheets.WireFrame.top,
-    4 : SpriteSheets.WireFrame.inbottomright,
-    5 : SpriteSheets.WireFrame.inbottomleft,
-    6 : SpriteSheets.WireFrame.midleft,
-    7 : SpriteSheets.WireFrame.center,
-    8 : SpriteSheets.WireFrame.midright,
-    9 : SpriteSheets.WireFrame.leftright,
+    0: SpriteSheets.WireFrame.topleft,
+    1: SpriteSheets.WireFrame.midtop,
+    2: SpriteSheets.WireFrame.topright,
+    3: SpriteSheets.WireFrame.top,
+    4: SpriteSheets.WireFrame.inbottomright,
+    5: SpriteSheets.WireFrame.inbottomleft,
+    6: SpriteSheets.WireFrame.midleft,
+    7: SpriteSheets.WireFrame.center,
+    8: SpriteSheets.WireFrame.midright,
+    9: SpriteSheets.WireFrame.leftright,
     10: SpriteSheets.WireFrame.intopright,
     11: SpriteSheets.WireFrame.intopleft,
     12: SpriteSheets.WireFrame.bottomleft,
@@ -56,10 +56,11 @@ class TileMap(List[List[int]]):
         r = surface.get_rect()
         surface.blits(
             (
-                (
-                    CODE[tile],
-                    [j*TL_W + x, i*TL_H + y]
-                 ) for i, row in enumerate(self) for j, tile in enumerate(row)
-                if tile is not None and r.colliderect([j*TL_W + x, i*TL_H + y, *TILE_SIZE]))
-            , False
+                (CODE[tile], [j * TL_W + x, i * TL_H + y])
+                for i, row in enumerate(self)
+                for j, tile in enumerate(row)
+                if tile is not None
+                and r.colliderect([j * TL_W + x, i * TL_H + y, *TILE_SIZE])
+            ),
+            False,
         )

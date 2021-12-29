@@ -1,14 +1,12 @@
+import sys
+import time
+
+import pygame
+
 from src.elements import Elements
 from src.fog import *
-from src.tilemap import TileMap
 from src.mobs import *
-from src.utils import *
-from src.data import *
-import pygame
-import time
-import math
-import sys
-import os
+from src.tilemap import TileMap
 
 
 class Game:
@@ -24,15 +22,16 @@ class Game:
 
         # pos, width, height, life, sprite_dict, initial_state
         self.player: Player = Player(
-            pygame.math.Vector2(self.WIN.get_size())//2,
-            PLAYER_SIZE, 4, {
+            pygame.math.Vector2(self.WIN.get_size()) // 2,
+            PLAYER_SIZE,
+            4,
+            {
                 "up": SpriteSheets.GreenSlime.WalkUp.get_animation(repeat=10),
-                # "down": SpriteSheets.GreenSlime.WalkDown.get_animation(repeat=10),
                 "left": SpriteSheets.GreenSlime.WalkLeft.get_animation(repeat=10),
                 "right": SpriteSheets.GreenSlime.WalkRight.get_animation(repeat=10),
-                "idle": SpriteSheets.GreenSlime.Idle.get_animation(repeat=10)
+                "idle": SpriteSheets.GreenSlime.Idle.get_animation(repeat=10),
             },
-            "idle"
+            "idle",
         )
 
         self.last_time: float = time.time()  # bad
@@ -54,7 +53,9 @@ class Game:
     def event_handler(self) -> None:
         keys = pygame.key.get_pressed()
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+            if event.type == pygame.QUIT or (
+                event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE
+            ):
                 pygame.quit()
                 sys.exit()
 

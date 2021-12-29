@@ -13,7 +13,13 @@ rand = random.random
 
 # PEP8 shut up, this clean def not
 is_el = lambda: rand() > CHANCE_FOR_ELEMENT
-what_el = lambda: 1 if rand() < ELEMENT_PER_CHANCE else 5 if rand() < ELEMENT_PER_CHANCE else 3
+what_el = (
+    lambda: 1
+    if rand() < ELEMENT_PER_CHANCE
+    else 5
+    if rand() < ELEMENT_PER_CHANCE
+    else 3
+)
 
 
 CODE = {
@@ -22,22 +28,22 @@ CODE = {
     3: SpriteSheets.Elements.californium,
     4: SpriteSheets.Elements.californium_display,
     5: SpriteSheets.Elements.thorium,
-    6: SpriteSheets.Elements.thorium_display
+    6: SpriteSheets.Elements.thorium_display,
 }
 
 s = SpriteSheet(PATHS.DATA / "pixelFontNumbers.png")
 h = 5
 font = {
-    0: s.clip([0 , 0, 4, h]).convert(),
-    1: s.clip([5 , 0, 2, h]).convert(),
-    2: s.clip([8 , 0, 3, h]).convert(),
+    0: s.clip([0, 0, 4, h]).convert(),
+    1: s.clip([5, 0, 2, h]).convert(),
+    2: s.clip([8, 0, 3, h]).convert(),
     3: s.clip([12, 0, 3, h]).convert(),
     4: s.clip([16, 0, 3, h]).convert(),
     5: s.clip([20, 0, 3, h]).convert(),
     6: s.clip([24, 0, 3, h]).convert(),
     7: s.clip([28, 0, 3, h]).convert(),
     8: s.clip([32, 0, 3, h]).convert(),
-    9: s.clip([36, 0, 3, h]).convert()
+    9: s.clip([36, 0, 3, h]).convert(),
 }
 
 
@@ -46,7 +52,9 @@ class _d(Dict[int, pygame.surface.Surface]):
         if n not in self:
             if n > 9:
                 n1, n2 = str(n)
-                ns = pygame.surface.Surface((font[int(n1)].get_width() + 1 + font[int(n2)].get_width(), h))
+                ns = pygame.surface.Surface(
+                    (font[int(n1)].get_width() + 1 + font[int(n2)].get_width(), h)
+                )
             else:
                 ns = pygame.surface.Surface((font[n].get_width(), h))
             x = 0
@@ -94,7 +102,13 @@ class Elements(List[List[int]]):
             for j, item in enumerate(row):
                 if item not in CODE:
                     continue
-                if r.colliderect([j * TL_W + ELEMENT_SIZE[0] / 2, i * TL_H + ELEMENT_SIZE[1] / 2, *ELEMENT_SIZE]):
+                if r.colliderect(
+                    [
+                        j * TL_W + ELEMENT_SIZE[0] / 2,
+                        i * TL_H + ELEMENT_SIZE[1] / 2,
+                        *ELEMENT_SIZE,
+                    ]
+                ):
                     v = self[i][j]
                     if v == 1:
                         self.uranium_count += 1
@@ -112,11 +126,23 @@ class Elements(List[List[int]]):
             [
                 (
                     CODE[tile],
-                    [j*TL_W + x + ELEMENT_SIZE[0] * 2 / 1.5, i*TL_H + y + ELEMENT_SIZE[1] * 2 / 1.5]
-                 ) for i, row in enumerate(self) for j, tile in enumerate(row)
-                if tile in CODE and r.colliderect([
-                j*TL_W + x + ELEMENT_SIZE[0] * 2 / 1.5, i*TL_H + y + ELEMENT_SIZE[1] * 2 / 1.5, *TILE_SIZE])
-            ], False
+                    [
+                        j * TL_W + x + ELEMENT_SIZE[0] * 2 / 1.5,
+                        i * TL_H + y + ELEMENT_SIZE[1] * 2 / 1.5,
+                    ],
+                )
+                for i, row in enumerate(self)
+                for j, tile in enumerate(row)
+                if tile in CODE
+                and r.colliderect(
+                    [
+                        j * TL_W + x + ELEMENT_SIZE[0] * 2 / 1.5,
+                        i * TL_H + y + ELEMENT_SIZE[1] * 2 / 1.5,
+                        *TILE_SIZE,
+                    ]
+                )
+            ],
+            False,
         )
 
     def draw_labels(self, surface: pygame.surface.Surface):
@@ -127,12 +153,20 @@ class Elements(List[List[int]]):
         x[2] += x[1]
         surface.blits(
             (
-                (CODE[[2, 4, 6][i]],
-                 [x[i], H - CODE[[2, 4, 6][i]].get_height()])
+                (CODE[[2, 4, 6][i]], [x[i], H - CODE[[2, 4, 6][i]].get_height()])
                 for i in range(3)
             ),
-            False
+            False,
         )
-        surface.blit(NUMBER_CACHE[self.uranium_count], (30, H - NUMBER_CACHE[self.uranium_count].get_height() - 7))
-        surface.blit(NUMBER_CACHE[self.californium_count], (95, H - NUMBER_CACHE[self.californium_count].get_height() - 7))
-        surface.blit(NUMBER_CACHE[self.thorium_count], (160, H - NUMBER_CACHE[self.thorium_count].get_height() - 7))
+        surface.blit(
+            NUMBER_CACHE[self.uranium_count],
+            (30, H - NUMBER_CACHE[self.uranium_count].get_height() - 7),
+        )
+        surface.blit(
+            NUMBER_CACHE[self.californium_count],
+            (95, H - NUMBER_CACHE[self.californium_count].get_height() - 7),
+        )
+        surface.blit(
+            NUMBER_CACHE[self.thorium_count],
+            (160, H - NUMBER_CACHE[self.thorium_count].get_height() - 7),
+        )

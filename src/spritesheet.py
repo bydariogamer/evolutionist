@@ -9,7 +9,12 @@ class SpriteSheet:
 
     image = my_sheet.clip([0, 0, 12, 12])  # returns a new surface with the data from the given area
     """
-    def __init__(self, path: Union[str, Path], colorkey: Union[Tuple[int, int, int], List[int], int]=None):
+
+    def __init__(
+        self,
+        path: Union[str, Path],
+        colorkey: Union[Tuple[int, int, int], List[int], int] = None,
+    ):
         self.sheet: pygame.surface.Surface = pygame.image.load(path)
         if colorkey is not None:
             if colorkey == -1:

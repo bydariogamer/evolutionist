@@ -69,12 +69,12 @@ class Player(Mob):
     SPEED = 5
 
     def __init__(
-            self,
-            pos: pygame.math.Vector2,
-            size: Tuple[int, int],
-            life: int,
-            sprite_dict: dict,
-            initial_state: ...
+        self,
+        pos: pygame.math.Vector2,
+        size: Tuple[int, int],
+        life: int,
+        sprite_dict: dict,
+        initial_state: ...,
     ):
         super().__init__(pos, *size, life, sprite_dict, initial_state)
 
