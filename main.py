@@ -1,16 +1,17 @@
 import pygame
 
 
-def run():
-    pygame.init()
-    pygame.font.init()
-    pygame.display.init()
+pygame.init()
 
-    screen = pygame.display.set_mode((1200, 700))
+screen = pygame.display.set_mode((1200, 700))
+clock = pygame.time.Clock()
+
+
+def run():
 
     from src.game import Game
 
-    game = Game(screen)
+    game = Game(screen, clock)
     game.run()
 
 

@@ -10,11 +10,11 @@ from src.tilemap import TileMap
 
 
 class Game:
-    def __init__(self, screen: pygame.surface.Surface):
+    def __init__(self, screen: pygame.surface.Surface, clock: pygame.time.Clock):
         self.WIN: pygame.surface.Surface = screen
 
         self.running: bool = True
-        self.clock: pygame.time.Clock = pygame.time.Clock()
+        self.clock = clock
         self.FPS: int = 60
 
         self.tilemap: TileMap = TileMap()
