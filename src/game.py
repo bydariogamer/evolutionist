@@ -43,12 +43,23 @@ class Game:
         self.elements: Elements = Elements()
         self.elements.from_tilemap(self.tilemap)
 
+        self.enemies: MobManager = MobManager()
+        self.enemies.from_tilemap(self.tilemap)
+
         pygame.display.set_caption(NAME)
 
     def update(self) -> None:
         self.player.update(self.tilemap, self.dt)
+        self.enemies.update(self.dt)
         self.fog.update(self.player)
         self.elements.update(self.player)
+
+        enemy = self.enemies.check_player(self.player)
+        if enemy is not None:
+            self.enemies.remove(enemy)
+            if self.elements.californium_count == 0:
+                exit("Lost L")
+            self.elements.californium_count -= 1
 
     def event_handler(self) -> None:
         keys = pygame.key.get_pressed()
@@ -67,6 +78,7 @@ class Game:
         self.tilemap.draw(self.WIN)
         self.player.draw(self.WIN)
         self.elements.draw_elements(self.WIN)
+        self.enemies.draw(self.WIN)
         self.fog.draw(self.WIN)
         self.elements.draw_labels(self.WIN)
 

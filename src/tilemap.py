@@ -36,7 +36,7 @@ class TileMap(List[List[int]]):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.offset: pygame.math.Vector2 = pygame.math.Vector2()
-        self.empty_tiles: List[Tuple[int, int]] = []
+        self.empty_tiles: List[pygame.Rect] = []
 
     def load(self, path):
         with open(path, "r") as f:
@@ -48,7 +48,7 @@ class TileMap(List[List[int]]):
                     l = int(l)
                     if l not in CODE:
                         l = None
-                        self.empty_tiles.append((j * TL_W, i * TL_H))  # x, y
+                        self.empty_tiles.append(pygame.Rect(j * TL_W, i * TL_H, *TILE_SIZE))  # x, y
                     self[~0].append(l)
 
     def draw(self, surface: pygame.surface.Surface) -> None:

@@ -1,9 +1,16 @@
 from itertools import cycle
 import src.tilemap as tmx  # i have no idea of there is anything package with that name ¯\_(ツ)_/¯
+from src.utils import *
 from src.data import *
 from typing import *  # shush
+import random
 import pygame
 import math
+
+
+rand = random.random
+CHANCE_FOR_MOB = 0.97
+is_mob = (lambda: rand() > CHANCE_FOR_MOB)
 
 
 class Mob:
@@ -30,7 +37,7 @@ class Mob:
 
         if self.vel.x != 0:
             of = tilemap.offset
-            for (x, y) in tilemap.empty_tiles:
+            for (x, y, w, h) in tilemap.empty_tiles:
                 if self.rect.colliderect([x + of.x, y + of.y, *TILE_SIZE]):
                     self.rect.x = ox
                     break
@@ -40,7 +47,7 @@ class Mob:
 
         if self.vel.y != 0:
             of = tilemap.offset
-            for (x, y) in tilemap.empty_tiles:
+            for (x, y, w, h) in tilemap.empty_tiles:
                 if self.rect.colliderect([x + of.x, y + of.y, *TILE_SIZE]):
                     self.rect.y = oy
                     break
@@ -62,24 +69,7 @@ class Mob:
 
     @property
     def pos(self):
-        return pygame.Vector2(self.rect.topleft)
-
-    @pos.setter
-    def pos(self, value):
-        self.rect.topleft = value
-
-    @property
-    def is_falling(self):
-        return self.vel.y < 0
-
-    @property
-    def is_on_ground(self):
-        return self.vel.y == 0
-
-
-class Monster(Mob):
-    def __init__(self, pos, width, height, life, sprite_dict, initial_state):
-        super().__init__(pos, width, height, life, sprite_dict, initial_state)
+        return pygame.math.Vector2(self.rect.topleft)
 
 
 class Player(Mob):
@@ -133,7 +123,30 @@ class Player(Mob):
         self.vel *= 0
 
 
-class MobManager(List[Mob]):  # karen style
+class Monster(Mob):
+    SPEED = 2
+
+    def move(self, tilemap: tmx.TileMap, dt=1):
+        right = self.state == "right"
+
+        if right:
+            self.rect.x += self.SPEED * dt
+        else:
+            self.rect.x -= self.SPEED * dt
+
+        for tile in tilemap.empty_tiles:
+            if tile is None: continue
+            if self.rect.colliderect(tile):
+                if right:
+                    self.state = "left"
+                    self.rect.right = tile.left
+                else:
+                    self.state = "right"
+                    self.rect.left = tile.right
+                break
+
+
+class MobManager(List[Monster]):  # karen style
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -143,6 +156,31 @@ class MobManager(List[Mob]):  # karen style
         for i, row in enumerate(self.tm):
             for j, tile in enumerate(row):
                 if tile in tmx.CODE:
-                    self.append(
-                        Mob((j*TL_W, i*TL_H), *PLAYER_SIZE, 4, {}, "idle")
-                    )
+                    if is_mob():
+                        rep = 7
+                        self.append(Monster((j*TL_W, i*TL_H), *SCIENTIST_SIZE, 4, {
+                                        "right": SpriteSheets.Scientist.WalkRight.get_animation(repeat=rep),
+                                        "left": SpriteSheets.Scientist.WalkLeft.get_animation(repeat=rep)
+                                    }, "left" if rand() > 0.499999999999 else "right"
+                                )
+                        )
+
+    def draw(self, surface: pygame.surface.Surface):
+        o = self.tm.offset
+        for en in self:
+            pp = pygame.Rect(en.rect)
+            en.rect.topleft += o
+            en.draw(surface)
+            en.rect = pp
+
+    def update(self, dt=1):
+        for en in self:
+            en.move(self.tm, dt)
+
+    def check_player(self, player: Player) -> Optional[Monster]:
+        o = self.tm.offset
+        for en in self:
+            pp = pygame.Rect(en.rect)
+            if player.rect.colliderect((pp.topleft + o, SCIENTIST_SIZE)):
+                return en
+        return None

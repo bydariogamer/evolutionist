@@ -43,6 +43,8 @@ MIDLEFT = "midleft"
 MIDBOTTOM = "midbottom"
 MIDRIGHT = "midright"
 
+_MISSING = object()
+
 
 @functools.lru_cache
 def load_image(path: str) -> pygame.surface.Surface:
