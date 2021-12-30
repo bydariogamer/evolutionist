@@ -102,6 +102,14 @@ class Player(Mob):
         elif down and not (up or left or right):
             self.vel.y = self.SPEED
 
+    def check_enemies(self, enemies: "MobManager", pos: pygame.math.Vector2) -> Optional["Monster"]:
+        off = enemies.tm.offset  # quality so shush
+        for en in enemies:
+            rr = pygame.Rect(en.rect)
+            rr.topleft += off
+            if self.pos.distance_squared_to(rr.topleft) < 200 * 200 and rr.collidepoint(pos):
+                return en
+
     def update(self, tilemap: "TileMap", dt):
         if self.vel.x == 0 == self.vel.y:
             self.state = "idle"
@@ -149,6 +157,21 @@ class Monster(Mob):
 class MobManager(List[Monster]):  # karen style
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def good_start(self, player):
+        """
+        it removes teh enemies from the grid if they are too close to the player
+        :param player:
+        :return:
+        """
+        off = self.tm.offset
+        max_distance = 200
+        for i in sorted(range(len(self)), reverse=True):
+            en = self[i]
+            rr = pygame.Rect(en.rect)
+            rr.topleft += off
+            if pygame.math.Vector2(rr.center).distance_to(player.rect.center) < max_distance:
+                self.pop(i)
 
     def from_tilemap(self, tilemap: tmx.TileMap):
         self.tm = tilemap

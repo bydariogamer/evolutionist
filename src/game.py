@@ -45,6 +45,7 @@ class Game:
 
         self.enemies: MobManager = MobManager()
         self.enemies.from_tilemap(self.tilemap)
+        self.enemies.good_start(self.player)
 
         pygame.display.set_caption(NAME)
 
@@ -69,6 +70,13 @@ class Game:
             ):
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    enemy = self.player.check_enemies(self.enemies, pygame.math.Vector2(event.pos))
+                    if enemy is not None:
+                        if self.elements.uranium_count > 0:
+                            self.elements.uranium_count -= 1
+                            self.enemies.remove(enemy)
 
         self.player.handle_keys(keys)
 
