@@ -9,6 +9,8 @@ import pygame
 
 NAME: str = "Evolutionist"
 
+FPS = 60
+
 W: int = 1200
 H: int = 700
 
@@ -21,6 +23,7 @@ ELEMENT_SIZE: Tuple[int, int] = (16, 16)
 ELEMENT_DISPLAY_SIZE: Tuple[int, int] = (int(40 * 1.5), int(56 * 1.5))
 SCIENTIST_SIZE: Tuple[int, int] = (18, 38)
 
+BACKGROUND = pygame.Color(20, 20, 200)
 
 class PATHS:
     DATA: Path = Path(__file__).parent.parent / "data"

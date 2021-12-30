@@ -111,7 +111,9 @@ def right_click(event: pygame.event.Event) -> bool:
 
 
 @functools.lru_cache
-def get_font(size, type_of_font="comicsans") -> pygame.font.Font:
+def get_font(size, type_of_font=None) -> pygame.font.Font:
+    if type_of_font is None:
+        type_of_font = pygame.font.get_default_font()
     if type_of_font.endswith(".ttf"):
         font = pygame.font.Font(type_of_font, size)
         return font
