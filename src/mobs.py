@@ -1,4 +1,5 @@
 from itertools import cycle
+import src.tilemap as tmx  # i have no idea of there is anything package with that name ¯\_(ツ)_/¯
 from src.data import *
 from typing import *  # shush
 import pygame
@@ -130,3 +131,18 @@ class Player(Mob):
         tilemap.offset.y -= displacement
 
         self.vel *= 0
+
+
+class MobManager(List[Mob]):  # karen style
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def from_tilemap(self, tilemap: tmx.TileMap):
+        self.tm = tilemap
+        self.clear()
+        for i, row in enumerate(self.tm):
+            for j, tile in enumerate(row):
+                if tile in tmx.CODE:
+                    self.append(
+                        Mob((j*TL_W, i*TL_H), *PLAYER_SIZE, 4, {}, "idle")
+                    )

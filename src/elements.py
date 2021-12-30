@@ -12,7 +12,9 @@ ELEMENT_PER_CHANCE = 0.6  # if it is smaller than that then it is uranium then t
 rand = random.random
 
 # PEP8 shut up, this clean def not
-is_el = lambda: rand() > CHANCE_FOR_ELEMENT
+is_el = (
+    lambda: rand() > CHANCE_FOR_ELEMENT
+)
 what_el = (
     lambda: 1
     if rand() < ELEMENT_PER_CHANCE
