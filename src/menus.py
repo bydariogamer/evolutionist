@@ -47,51 +47,34 @@ class Menu:
 
 
 class MainMenu(Menu):
+    TITLE = text("EVOLUTIONIST", (200, 30, 30), 150)
+    AUTHORS = text("by Emc235 & bydariogamer", (250, 40, 40), 30)
+
     def __init__(self, screen: pygame.Surface, clock: pygame.time.Clock, buttons):
         super().__init__(screen, clock, buttons)
-        self.title = text("EVOLUTIONIST", (200, 30, 30), 150)
-        self.authors = text("by Emc235 & bydariogamer", (250, 40, 40), 30)
         sheet = SpriteSheet(PATHS.SPRITESHEETS / "slime-green-right.png")
         data = load_json(PATHS.SPRITESHEETS / "slime-green-right.json")
-
-        frame1 = pygame.transform.scale(
-            sheet.clip(data["frames"]["1"]), (300, 300)
-        ).convert_alpha()
-        frame2 = pygame.transform.scale(
-            sheet.clip(data["frames"]["2"]), (300, 300)
-        ).convert_alpha()
-        frame3 = pygame.transform.scale(
-            sheet.clip(data["frames"]["3"]), (300, 300)
-        ).convert_alpha()
-        frame4 = pygame.transform.scale(
-            sheet.clip(data["frames"]["4"]), (300, 300)
-        ).convert_alpha()
-        frame5 = pygame.transform.scale(
-            sheet.clip(data["frames"]["5"]), (300, 300)
-        ).convert_alpha()
-        frame6 = pygame.transform.scale(
-            sheet.clip(data["frames"]["6"]), (300, 300)
-        ).convert_alpha()
-        frame7 = pygame.transform.scale(
-            sheet.clip(data["frames"]["7"]), (300, 300)
-        ).convert_alpha()
-        frame8 = pygame.transform.scale(
-            sheet.clip(data["frames"]["8"]), (300, 300)
-        ).convert_alpha()
-
+        frames = [pygame.transform.scale(
+            sheet.clip(data["frames"][str(i)]), (300, 300)
+        ).convert_alpha() for i in range(1, 9)]
         self.animation = cycle(
-            [frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8]
+            frames
         )
         self.animation_limiter = cycle(range(4))
         self.last_anim = next(self.animation)
 
     def draw(self):
         self.screen.fill(self.BACKGROUND)
-        self.screen.blit(self.title, (10, 30))
-        self.screen.blit(self.authors, (50, 180))
+        self.screen.blit(self.TITLE, (10, 30))
+        self.screen.blit(self.AUTHORS, (50, 180))
         if not next(self.animation_limiter):
             self.last_anim = next(self.animation)
         self.screen.blit(self.last_anim, (800, 250))
         for button in sorted(self.buttons, key=attrgetter("rect.left")):
             button.draw(self.screen)
         pygame.display.update()
+
+
+class PauseMenu(Menu):
+    def __init__(self, screen: pygame.Surface, clock: pygame.time.Clock, buttons):
+        super().__init__(screen, clock, buttons)

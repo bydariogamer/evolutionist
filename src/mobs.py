@@ -92,6 +92,7 @@ class Player(Mob):
             "GIGANTIC": False,
             "RETROTRANSCRIPTASE": False,
         }
+        self.mutation_points = 0
 
     def handle_keys(self, keys: Sequence[bool]):
         left = keys[pygame.K_a] or keys[pygame.K_LEFT]
@@ -210,7 +211,8 @@ class Monster(Mob):
                 self.rect.y -= self.SPEED * dt
 
             for tile in tilemap.empty_tiles:
-                if tile is None: continue
+                if tile is None:
+                    continue
                 if self.rect.colliderect(tile):
                     if down:
                         self.state = "up"

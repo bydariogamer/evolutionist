@@ -48,9 +48,6 @@ class Collectables(List[List[int]]):
                         self[~0].append(-1)
                 else:
                     self[~0].append(-1)
-        self.uranium_count: int = 0
-        self.californium_count: int = 0
-        self.thorium_count: int = 0
 
     @property
     def offset(self):
@@ -75,11 +72,11 @@ class Collectables(List[List[int]]):
                 ):
                     v = self[i][j]
                     if v == 1:
-                        self.uranium_count += 1
+                        player.mutation_points += 1
                     elif v == 3:
-                        self.californium_count += 1
+                        player.mutation_points += 2
                     elif v == 5:
-                        self.thorium_count += 1
+                        player.mutation_points += 3
                     self[i][j] = -1
 
     def draw_elements(self, surface: pygame.surface.Surface):
@@ -109,33 +106,33 @@ class Collectables(List[List[int]]):
             False,
         )
 
-    def draw_labels(self, surface: pygame.surface.Surface):
-        # dont say a word about my **awesome** code
-        x = [0]
-        for i in (2, 4):
-            x.append(CODE[i].get_width())
-        x[2] += x[1]
-        surface.blits(
-            (
-                (CODE[[2, 4, 6][i]], [x[i], H - CODE[[2, 4, 6][i]].get_height()])
-                for i in range(3)
-            ),
-            False,
-        )
-        clr = (50, 50, 50)
-        surface.blit(
-            Fonts.pixel_font.render(str(self.uranium_count), True, clr),
-            (30, H - Fonts.pixel_font.render(str(self.uranium_count), True, clr).get_height() - 7 + 5),
-        )
-        surface.blit(
-            Fonts.pixel_font.render(str(self.californium_count), True, clr),
-            (95, H - Fonts.pixel_font.render(str(self.californium_count), True, clr).get_height() - 7 + 5),
-        )
-        surface.blit(
-            Fonts.pixel_font.render(str(self.thorium_count), True, clr),
-            (160, H - Fonts.pixel_font.render(str(self.thorium_count), True, clr).get_height() - 7 + 5),
-        )
-
-    @property
-    def is_eligible_for_dna(self):
-        return self.uranium_count >= 3 and self.thorium_count >= 2 and self.californium_count >= 1
+    # def draw_labels(self, surface: pygame.surface.Surface):
+    #     # dont say a word about my **awesome** code
+    #     x = [0]
+    #     for i in (2, 4):
+    #         x.append(CODE[i].get_width())
+    #     x[2] += x[1]
+    #     surface.blits(
+    #         (
+    #             (CODE[[2, 4, 6][i]], [x[i], H - CODE[[2, 4, 6][i]].get_height()])
+    #             for i in range(3)
+    #         ),
+    #         False,
+    #     )
+    #     clr = (50, 50, 50)
+    #     surface.blit(
+    #         Fonts.pixel_font.render(str(self.uranium_count), True, clr),
+    #         (30, H - Fonts.pixel_font.render(str(self.uranium_count), True, clr).get_height() - 7 + 5),
+    #     )
+    #     surface.blit(
+    #         Fonts.pixel_font.render(str(self.californium_count), True, clr),
+    #         (95, H - Fonts.pixel_font.render(str(self.californium_count), True, clr).get_height() - 7 + 5),
+    #     )
+    #     surface.blit(
+    #         Fonts.pixel_font.render(str(self.thorium_count), True, clr),
+    #         (160, H - Fonts.pixel_font.render(str(self.thorium_count), True, clr).get_height() - 7 + 5),
+    #     )
+    #
+    # @property
+    # def is_eligible_for_dna(self):
+    #     return self.uranium_count >= 3 and self.thorium_count >= 2 and self.californium_count >= 1
