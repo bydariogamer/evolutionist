@@ -151,10 +151,10 @@ class Game:
                                 "right": SpriteSheets.Scientist.DeathAnimations.AcidRight.get_animation,
                                 "left": SpriteSheets.Scientist.DeathAnimations.AcidLeft.get_animation
                             }[enemy.state](repeat=10)
+                    else:
+                        print(f"unknown animation type '{type_}'")
 
                     enemy.animation_dict["ded"] = ani
-
-
                     enemy.state = "ded"
             self.WIN.blit(surf, pos)
 
