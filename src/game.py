@@ -25,10 +25,17 @@ class Game:
 
         self.FPS: int = 60
 
-        self.tilemap: TileMap = TileMap()
-        self.tilemap.load(PATHS.MAPS / "level1.csv")
+        self.last_time: float = time.time()  # bad
+        self.dt: float = 0
+        
+        self.initialize(PATHS.MAPS / "level1.csv")
 
-        # pos, width, height, life, sprite_dict, initial_state
+        pygame.display.set_caption(NAME)
+
+    def initialize(self, path: str):
+        self.tilemap: TileMap = TileMap()
+        self.tilemap.load(PATHS.MAPS / path)
+
         self.player: Player = Player(
             pygame.math.Vector2(self.WIN.get_size()) // 2,
             PLAYER_SIZE,
@@ -42,9 +49,6 @@ class Game:
             "idle",
         )
 
-        self.last_time: float = time.time()  # bad
-        self.dt: float = 0
-
         self.fog: Fog = Fog()
         self.fog.from_tilemap(self.tilemap)
 
@@ -54,15 +58,13 @@ class Game:
         self.enemies: MobManager = MobManager()
         self.enemies.from_tilemap(self.tilemap)
         self.enemies.good_start(self.player)
-
+        
         # enemy, surf, pos, vel, last_frame_to_be_alive, callable
         self.bullets: List[
             List[Union[Monster, pygame.surface.Surface, pygame.math.Vector2, pygame.math.Vector2, int, type(lambda x: None)]]
         ] = []
-
+        
         self.DNA_count: int = 0
-
-        pygame.display.set_caption(NAME)
 
     @property
     def is_level_finished(self):
