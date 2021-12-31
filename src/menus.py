@@ -4,10 +4,8 @@ from itertools import cycle
 
 import pygame
 
-import main
-from game import Game
-from src.data import FPS, BACKGROUND, W, H, PLAYER_SIZE, PATHS
-from src.button import Button
+
+from src.data import FPS, BACKGROUND, PATHS
 from src.utils import text, load_json
 from src.spritesheet import SpriteSheet
 
@@ -97,26 +95,3 @@ class MainMenu(Menu):
         for button in sorted(self.buttons, key=attrgetter("rect.left")):
             button.draw(self.screen)
         pygame.display.update()
-
-
-mainmenu = MainMenu(
-    main.screen,
-    main.clock,
-    [
-        Button(
-            (0, H / 2, 600, 100),
-            color=(100, 100, 250),
-            label="PLAY",
-            on_click=[lambda _: Game(main.screen, main.clock).run()]
-        ),
-        Button(
-            (0, H / 2 + 130, 600, 100),
-            color=(100, 100, 250),
-            label="EXIT",
-            on_click=[Button.put_exit]
-        )
-    ]
-)
-
-if __name__ == "__main__":
-    mainmenu.loop()
