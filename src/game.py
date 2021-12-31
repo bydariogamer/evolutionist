@@ -109,7 +109,7 @@ class Game:
                     # add the enemy in the bullets lists
                     else:  # triggered only when the for loop didnt hit a break statement
                         if enemy is not None:
-                            self.enemies.attack(enemy, self.player.power, self)
+                            self.enemies.attack(enemy, self.player, self)
 
                     # check for the DNA point system
                     x, y = event.pos

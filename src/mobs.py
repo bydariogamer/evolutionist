@@ -240,11 +240,12 @@ class MobManager(List[Monster]):  # karen style
             if pygame.math.Vector2(rr.center).distance_to(player.rect.center) < max_distance:
                 self.pop(i)
 
-    def attack(self, enemy: Monster, power: float, game: "Game"):
+    def attack(self, enemy: Monster, player: "Player", game: "Game"):
         """
         apply damage to an enemy and if it is too low *KILL*
         """
         duration = 10
+        power = player.power
 
         def init_bul(surf, vel, func):
             enemy.idle()
@@ -263,7 +264,7 @@ class MobManager(List[Monster]):  # karen style
 
         velocity = delta / dist * duration
 
-        attack = ATTACKS["acid"]  # TODO: make this dynamic
+        attack = ATTACKS[player.attack]  # TODO: make this dynamic
 
         if enemy.life <= power:
             init_bul(
