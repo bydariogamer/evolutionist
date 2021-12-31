@@ -36,7 +36,7 @@ CODE = {
 font = pygame.font.Font(PATHS.DATA / "fonts" / "pixelFont.ttf", 20)
 
 
-class Elements(List[List[int]]):
+class Collectables(List[List[int]]):
     def from_tilemap(self, tilemap: tmx.TileMap):
         self.tm = tilemap
         self.clear()

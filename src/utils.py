@@ -266,3 +266,28 @@ def ninepatch(surface: pygame.Surface, rect: tuple):
     result.blit(c3, (rect.w - subsurf_w, rect.h - subsurf_h))
 
     return result
+
+
+# ~~stolen~~ borrowed from https://github.com/pygame/pygame/pull/2929#issuecomment-1002342735
+def vector2_move_towards(
+        origin,
+        target,
+        speed: float
+):
+    """Moves towards the target Vector2 by the movement speed.
+
+    Must be put in a loop until its reached its target.
+
+    Parameters:
+        origin: The original position
+        target: The target position.
+        speed: The movement speed.
+
+    """
+    delta = target - origin
+    dist = delta.magnitude()
+
+    if dist <= speed or dist == 0:
+        return target
+
+    return origin + delta / dist * speed

@@ -13,7 +13,15 @@ CHANCE_FOR_MOB = 0.97
 is_mob = (lambda: rand() > CHANCE_FOR_MOB)
 
 
-class Mob:
+ATTACKS = {
+    "electro": SpriteSheets.Bullets.electro,
+    "ice": SpriteSheets.Bullets.ice,
+    "fire": SpriteSheets.Bullets.fire,
+    "acid": SpriteSheets.Bullets.acid
+}
+
+
+class Mob:  # abstract class????????
     def __init__(self, pos, width, height, life, animation_dict, initial_state):
         self.rect = pygame.Rect(pos[0], pos[1], width, height)
         self.life = life
@@ -22,7 +30,14 @@ class Mob:
         self.vel = pygame.Vector2(0)
 
     def draw(self, surface: pygame.Surface):
-        surface.blit(next(self.animation_dict[self.state]), self.pos)
+        if isinstance(self, Monster) and self.ded:
+            try:
+                surface.blit(self.last_image, self.pos)
+                self.last_image = next(self.animation_dict[self.state])
+            except StopIteration:
+                pass
+        else:
+            surface.blit(next(self.animation_dict[self.state]), self.pos)
 
     def update(self, tilemap: "TileMap", dt):
         # changes
@@ -52,21 +67,6 @@ class Mob:
                     self.rect.y = oy
                     break
 
-    def hurt(self, damage):
-        self.life -= damage
-        if self.life < 0:
-            self.life = 0
-
-    def kill(self):
-        self.life = 0
-
-    def change_state(self, new_state):
-        self.state = new_state
-
-    @property
-    def alife(self):
-        return bool(self.life)
-
     @property
     def pos(self):
         return pygame.math.Vector2(self.rect.topleft)
@@ -84,6 +84,7 @@ class Player(Mob):
         initial_state: ...,
     ):
         super().__init__(pos, *size, life, sprite_dict, initial_state)
+        self.power: float = 1
 
     def handle_keys(self, keys: Sequence[bool]):
         left = keys[pygame.K_a] or keys[pygame.K_LEFT]
@@ -104,10 +105,11 @@ class Player(Mob):
 
     def check_enemies(self, enemies: "MobManager", pos: pygame.math.Vector2) -> Optional["Monster"]:
         off = enemies.tm.offset  # quality so shush
+        max_distance = 200
         for en in enemies:
             rr = pygame.Rect(en.rect)
             rr.topleft += off
-            if self.pos.distance_squared_to(rr.topleft) < 200 * 200 and rr.collidepoint(pos):
+            if not en.ded and self.pos.distance_squared_to(rr.topleft) < max_distance * max_distance and rr.collidepoint(pos):
                 return en
 
     def update(self, tilemap: "TileMap", dt):
@@ -134,24 +136,60 @@ class Player(Mob):
 class Monster(Mob):
     SPEED = 2
 
+    def __init__(self, pos, width, height, life, animation_dict, initial_state):
+        super().__init__(pos, width, height, life, animation_dict, initial_state)
+        self.prev_state = initial_state
+        self.ded: bool = False
+
+        self.last_image: Optional[pygame.surface.Surface] = pygame.surface.Surface((0, 0))
+
+    def idle(self):
+        self.prev_state = self.state
+        self.animation_dict["idle"] = cycle([next(self.animation_dict[self.state])])
+        self.state = "idle"
+
+    def stop_idle(self):
+        self.state = self.prev_state
+
     def move(self, tilemap: tmx.TileMap, dt=1):
-        right = self.state == "right"
+        if self.state == "idle" or self.ded: return
 
-        if right:
-            self.rect.x += self.SPEED * dt
+        if self.state in {"left", "right"}:
+            right = self.state == "right"
+
+            if right:
+                self.rect.x += self.SPEED * dt
+            else:
+                self.rect.x -= self.SPEED * dt
+
+            for tile in tilemap.empty_tiles:
+                if tile is None: continue
+                if self.rect.colliderect(tile):
+                    if right:
+                        self.state = "left"
+                        self.rect.right = tile.left
+                    else:
+                        self.state = "right"
+                        self.rect.left = tile.right
+                    break
         else:
-            self.rect.x -= self.SPEED * dt
+            down = self.state == "down"
 
-        for tile in tilemap.empty_tiles:
-            if tile is None: continue
-            if self.rect.colliderect(tile):
-                if right:
-                    self.state = "left"
-                    self.rect.right = tile.left
-                else:
-                    self.state = "right"
-                    self.rect.left = tile.right
-                break
+            if down:
+                self.rect.y += self.SPEED * dt
+            else:
+                self.rect.y -= self.SPEED * dt
+
+            for tile in tilemap.empty_tiles:
+                if tile is None: continue
+                if self.rect.colliderect(tile):
+                    if down:
+                        self.state = "up"
+                        self.rect.bottom = tile.top
+                    else:
+                        self.state = "down"
+                        self.rect.top = tile.bottom
+                    break
 
 
 class MobManager(List[Monster]):  # karen style
@@ -160,7 +198,7 @@ class MobManager(List[Monster]):  # karen style
 
     def good_start(self, player):
         """
-        it removes teh enemies from the grid if they are too close to the player
+        it removes the enemies from the grid if they are too close to the player
         :param player:
         :return:
         """
@@ -173,6 +211,48 @@ class MobManager(List[Monster]):  # karen style
             if pygame.math.Vector2(rr.center).distance_to(player.rect.center) < max_distance:
                 self.pop(i)
 
+    def attack(self, enemy: Monster, power: float, game: "Game"):
+        """
+        apply damage to an enemy and if it is too low *KILL*
+        """
+        duration = 10
+
+        def init_bul(surf, vel, func):
+            enemy.idle()
+            game.bullets.append([
+                enemy,
+                surf,
+                pygame.math.Vector2(game.player.rect.center),
+                vel,
+                game.frame_count + duration,
+                list(ATTACKS.keys())[list(ATTACKS.values()).index(surf)],  # quality and dont talk
+                func
+            ])
+
+        delta = (pygame.math.Vector2(enemy.rect.center) + game.tilemap.offset - pygame.math.Vector2(game.player.rect.center))
+        dist = delta.magnitude()
+
+        velocity = delta / dist * duration
+
+        attack = ATTACKS["acid"]  # TODO: make this dynamic
+
+        if enemy.life <= power:
+            init_bul(
+                attack,
+                velocity,
+                lambda: setattr(enemy, "ded", True)
+            )
+            return
+
+        def m_health():
+            self[self.index(enemy)].life -= power
+
+        init_bul(
+            attack,
+            velocity,
+            m_health
+        )
+
     def from_tilemap(self, tilemap: tmx.TileMap):
         self.tm = tilemap
         self.clear()
@@ -181,14 +261,23 @@ class MobManager(List[Monster]):  # karen style
                 if tile in tmx.CODE:
                     if is_mob():
                         rep = 7
-                        self.append(Monster((j*TL_W, i*TL_H), *SCIENTIST_SIZE, 4, {
+                        c = random.choice(["left", "right", "up", "down"])
+                        p = (j*TL_W + SCIENTIST_SIZE[0], i*TL_H + SCIENTIST_SIZE[1]) if c in "up|down" else (j*TL_W, i*TL_H)
+                        self.append(Monster(p, *SCIENTIST_SIZE, 4, {
                                         "right": SpriteSheets.Scientist.WalkRight.get_animation(repeat=rep),
-                                        "left": SpriteSheets.Scientist.WalkLeft.get_animation(repeat=rep)
-                                    }, "left" if rand() > 0.499999999999 else "right"
+                                        "left": SpriteSheets.Scientist.WalkLeft.get_animation(repeat=rep),
+                                        "up": SpriteSheets.Scientist.WalkUp.get_animation(repeat=rep),
+                                        "down": SpriteSheets.Scientist.WalkDown.get_animation(repeat=rep)
+                                    }, c
                                 )
                         )
 
     def draw(self, surface: pygame.surface.Surface):
+        """
+        draw
+        :param surface:
+        :return:
+        """
         o = self.tm.offset
         for en in self:
             pp = pygame.Rect(en.rect)
@@ -197,10 +286,20 @@ class MobManager(List[Monster]):  # karen style
             en.rect = pp
 
     def update(self, dt=1):
+        """
+        moves all of the enemies
+        :param dt:
+        :return:
+        """
         for en in self:
             en.move(self.tm, dt)
 
     def check_player(self, player: Player) -> Optional[Monster]:
+        """
+        player-enemy collision check
+        :param player:
+        :return:
+        """
         o = self.tm.offset
         for en in self:
             pp = pygame.Rect(en.rect)
