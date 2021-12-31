@@ -1,5 +1,6 @@
 # the data that the game will use
 from typing import Tuple
+from functools import partial
 from itertools import cycle
 from src.spritesheet import SpriteSheet
 import src.utils as utils
@@ -25,6 +26,12 @@ SCIENTIST_SIZE: Tuple[int, int] = (18, 38)
 BULLET_SIZE: Tuple[int, int] = (7, 7)
 
 BACKGROUND = pygame.Color(20, 20, 200)
+
+
+flipx = partial(pygame.transform.flip, flip_x=True, flip_y=False)
+flipy = partial(pygame.transform.flip, flip_x=False, flip_y=True)
+flipxy = partial(pygame.transform.flip, flip_x=True, flip_y=True)
+scale = pygame.transform.scale
 
 
 class PATHS:
@@ -54,12 +61,13 @@ class SingleAnimation:  # abstract class
     """
     @classmethod
     def get_animation(cls, repeat: int=1):
+        if not hasattr(cls, "frames"):
+            return []
         return iter(
             [
-                getattr(cls, frame)
-                for frame in dir(cls)
-                for _ in range(repeat)
-                if "frame" in frame
+                frame
+                for frame in cls.frames
+                for i in range(repeat)
             ]
         )
 
@@ -403,105 +411,81 @@ class SpriteSheets:
                 sheet = SpriteSheet(PATHS.SPRITESHEETS / "scientist-electrified-right.png")
                 data = utils.load_json(PATHS.SPRITESHEETS / "scientist-electrified-right.json")
 
-                frame1 = pygame.transform.scale(sheet.clip(data["frames"]["1"]), SCIENTIST_SIZE).convert_alpha()
-                frame2 = pygame.transform.scale(sheet.clip(data["frames"]["2"]), SCIENTIST_SIZE).convert_alpha()
-                frame3 = pygame.transform.scale(sheet.clip(data["frames"]["3"]), SCIENTIST_SIZE).convert_alpha()
-                frame4 = pygame.transform.scale(sheet.clip(data["frames"]["4"]), SCIENTIST_SIZE).convert_alpha()
-                frame5 = pygame.transform.scale(sheet.clip(data["frames"]["5"]), SCIENTIST_SIZE).convert_alpha()
-                frame6 = pygame.transform.scale(sheet.clip(data["frames"]["6"]), SCIENTIST_SIZE).convert_alpha()
-                frame7 = pygame.transform.scale(sheet.clip(data["frames"]["7"]), SCIENTIST_SIZE).convert_alpha()
-                frame8 = pygame.transform.scale(sheet.clip(data["frames"]["8"]), SCIENTIST_SIZE).convert_alpha()
+                frames = []
+                for i in range(1, 9):
+                    frames.append(
+                        scale(sheet.clip(data["frames"][str(i)]), SCIENTIST_SIZE).convert_alpha()
+                    )
 
             class ElectrifiedLeft(SingleAnimation):
                 sheet = SpriteSheet(PATHS.SPRITESHEETS / "scientist-electrified-right.png")
                 data = utils.load_json(PATHS.SPRITESHEETS / "scientist-electrified-right.json")
 
-                frame1 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["1"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame2 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["2"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame3 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["3"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame4 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["4"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame5 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["5"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame6 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["6"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame7 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["7"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame8 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["8"]), SCIENTIST_SIZE).convert_alpha(), True, False)
+                frames = []
+                for i in range(1, 9):
+                    frames.append(
+                        flipx(scale(sheet.clip(data["frames"][str(i)]), SCIENTIST_SIZE)).convert_alpha()
+                    )
 
             class FreezingRight(SingleAnimation):
                 sheet = SpriteSheet(PATHS.SPRITESHEETS / "scientist-freezing-right.png")
                 data = utils.load_json(PATHS.SPRITESHEETS / "scientist-freezing-right.json")
 
-                frame1 = pygame.transform.scale(sheet.clip(data["frames"]["1"]), SCIENTIST_SIZE).convert_alpha()
-                frame2 = pygame.transform.scale(sheet.clip(data["frames"]["2"]), SCIENTIST_SIZE).convert_alpha()
-                frame3 = pygame.transform.scale(sheet.clip(data["frames"]["3"]), SCIENTIST_SIZE).convert_alpha()
-                frame4 = pygame.transform.scale(sheet.clip(data["frames"]["4"]), SCIENTIST_SIZE).convert_alpha()
-                frame5 = pygame.transform.scale(sheet.clip(data["frames"]["5"]), SCIENTIST_SIZE).convert_alpha()
-                frame6 = pygame.transform.scale(sheet.clip(data["frames"]["6"]), SCIENTIST_SIZE).convert_alpha()
-                frame7 = pygame.transform.scale(sheet.clip(data["frames"]["7"]), SCIENTIST_SIZE).convert_alpha()
-                frame8 = pygame.transform.scale(sheet.clip(data["frames"]["8"]), SCIENTIST_SIZE).convert_alpha()
+                frames = []
+                for i in range(1, 9):
+                    frames.append(
+                        scale(sheet.clip(data["frames"][str(i)]), SCIENTIST_SIZE).convert_alpha()
+                    )
 
             class FreezingLeft(SingleAnimation):
                 sheet = SpriteSheet(PATHS.SPRITESHEETS / "scientist-freezing-right.png")
                 data = utils.load_json(PATHS.SPRITESHEETS / "scientist-freezing-right.json")
 
-                frame1 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["1"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame2 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["2"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame3 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["3"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame4 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["4"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame5 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["5"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame6 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["6"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame7 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["7"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame8 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["8"]), SCIENTIST_SIZE).convert_alpha(), True, False)
+                frames = []
+                for i in range(1, 9):
+                    frames.append(
+                        flipx(scale(sheet.clip(data["frames"][str(i)]), SCIENTIST_SIZE)).convert_alpha()
+                    )
 
             class OnFireRight(SingleAnimation):
                 sheet = SpriteSheet(PATHS.SPRITESHEETS / "scientist-onfire-right.png")
                 data = utils.load_json(PATHS.SPRITESHEETS / "scientist-onfire-right.json")
 
-                frame1 = pygame.transform.scale(sheet.clip(data["frames"]["1"]), SCIENTIST_SIZE).convert_alpha()
-                frame2 = pygame.transform.scale(sheet.clip(data["frames"]["2"]), SCIENTIST_SIZE).convert_alpha()
-                frame3 = pygame.transform.scale(sheet.clip(data["frames"]["3"]), SCIENTIST_SIZE).convert_alpha()
-                frame4 = pygame.transform.scale(sheet.clip(data["frames"]["4"]), SCIENTIST_SIZE).convert_alpha()
-                frame5 = pygame.transform.scale(sheet.clip(data["frames"]["5"]), SCIENTIST_SIZE).convert_alpha()
-                frame6 = pygame.transform.scale(sheet.clip(data["frames"]["6"]), SCIENTIST_SIZE).convert_alpha()
-                frame7 = pygame.transform.scale(sheet.clip(data["frames"]["7"]), SCIENTIST_SIZE).convert_alpha()
-                frame8 = pygame.transform.scale(sheet.clip(data["frames"]["8"]), SCIENTIST_SIZE).convert_alpha()
+                frames = []
+                for i in range(1, 9):
+                    frames.append(
+                        scale(sheet.clip(data["frames"][str(i)]), SCIENTIST_SIZE).convert_alpha()
+                    )
 
             class OnFireLeft(SingleAnimation):
                 sheet = SpriteSheet(PATHS.SPRITESHEETS / "scientist-onfire-right.png")
                 data = utils.load_json(PATHS.SPRITESHEETS / "scientist-onfire-right.json")
 
-                frame1 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["1"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame2 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["2"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame3 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["3"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame4 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["4"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame5 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["5"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame6 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["6"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame7 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["7"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame8 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["8"]), SCIENTIST_SIZE).convert_alpha(), True, False)
+                frames = []
+                for i in range(1, 9):
+                    frames.append(
+                        flipx(scale(sheet.clip(data["frames"][str(i)]), SCIENTIST_SIZE)).convert_alpha()
+                    )
 
             class AcidRight(SingleAnimation):
                 sheet = SpriteSheet(PATHS.SPRITESHEETS / "scientist-disolved-right.png")
                 data = utils.load_json(PATHS.SPRITESHEETS / "scientist-disolved-right.json")
 
-                frame1 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["1"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame2 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["2"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame3 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["3"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame4 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["4"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame5 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["5"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame6 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["6"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame7 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["7"]), SCIENTIST_SIZE).convert_alpha(), True, False)
-                frame8 = pygame.transform.flip(pygame.transform.scale(sheet.clip(data["frames"]["8"]), SCIENTIST_SIZE).convert_alpha(), True, False)
+                frames = []
+                for i in range(1, 9):
+                    frames.append(
+                        scale(sheet.clip(data["frames"][str(i)]), SCIENTIST_SIZE).convert_alpha()
+                    )
 
             class AcidLeft(SingleAnimation):
                 sheet = SpriteSheet(PATHS.SPRITESHEETS / "scientist-disolved-right.png")
                 data = utils.load_json(PATHS.SPRITESHEETS / "scientist-disolved-right.json")
 
-                frame1 = pygame.transform.scale(sheet.clip(data["frames"]["1"]), SCIENTIST_SIZE).convert_alpha()
-                frame2 = pygame.transform.scale(sheet.clip(data["frames"]["2"]), SCIENTIST_SIZE).convert_alpha()
-                frame3 = pygame.transform.scale(sheet.clip(data["frames"]["3"]), SCIENTIST_SIZE).convert_alpha()
-                frame4 = pygame.transform.scale(sheet.clip(data["frames"]["4"]), SCIENTIST_SIZE).convert_alpha()
-                frame5 = pygame.transform.scale(sheet.clip(data["frames"]["5"]), SCIENTIST_SIZE).convert_alpha()
-                frame6 = pygame.transform.scale(sheet.clip(data["frames"]["6"]), SCIENTIST_SIZE).convert_alpha()
-                frame7 = pygame.transform.scale(sheet.clip(data["frames"]["7"]), SCIENTIST_SIZE).convert_alpha()
-                frame8 = pygame.transform.scale(sheet.clip(data["frames"]["8"]), SCIENTIST_SIZE).convert_alpha()
+                frames = []
+                for i in range(1, 9):
+                    frames.append(
+                        flipx(scale(sheet.clip(data["frames"][str(i)]), SCIENTIST_SIZE)).convert_alpha()
+                    )
 
     class Bullets:
         sheet = SpriteSheet(PATHS.SPRITESHEETS / "bullets.png")
@@ -515,7 +499,6 @@ class SpriteSheets:
 
 class Images:
     DNA = pygame.image.load(PATHS.SPRITES / "DNA.png").convert_alpha()
-    TABLE = pygame.image.load(PATHS.SPRITES / "table.png").convert_alpha()
 
 
 class Fonts:

@@ -126,8 +126,8 @@ class Game:
                         "fire": "OnFire",
                         "acid": "Acid"
                     }[type_] + {
-                        "right": "Left",
-                        "left": "Right"
+                        "right": "Right",
+                        "left": "Left"
                     }[enemy.state if enemy.state in {"right", "left"} else random.choice(["right", "left"])]
 
                     enemy.animation_dict["ded"] = getattr(SpriteSheets.Scientist.DeathAnimations, animation_type).get_animation(repeat=10)
