@@ -4,11 +4,11 @@ from itertools import cycle
 
 import pygame
 
-
-from src.data import FPS, BACKGROUND, PATHS
+from src.data import FPS, BACKGROUND, PATHS, H
 from src.utils import text, load_json
 from src.spritesheet import SpriteSheet
-
+from src.button import Button
+from src.game import Game
 
 class Menu:
     BACKGROUND = BACKGROUND
@@ -45,12 +45,35 @@ class Menu:
             self.draw()
             self.update()
 
+    def stop(self):
+        self.running = False
+
 
 class MainMenu(Menu):
     TITLE = text("EVOLUTIONIST", (200, 30, 30), 150)
     AUTHORS = text("by Emc235 & bydariogamer", (250, 40, 40), 30)
 
-    def __init__(self, screen: pygame.Surface, clock: pygame.time.Clock, buttons):
+    def __init__(
+            self,
+            screen: pygame.Surface,
+            clock: pygame.time.Clock,
+            buttons: Button = None,
+    ):
+        if buttons is None:
+            buttons = [
+                Button(
+                    (0, H / 2, 600, 100),
+                    color=(100, 100, 250),
+                    label="PLAY",
+                    on_click=[lambda _: Game(screen, clock).run()]
+                ),
+                Button(
+                    (0, H / 2 + 130, 600, 100),
+                    color=(100, 100, 250),
+                    label="EXIT",
+                    on_click=[Button.put_exit]
+                )
+            ]
         super().__init__(screen, clock, buttons)
         sheet = SpriteSheet(PATHS.SPRITESHEETS / "slime-green-right.png")
         data = load_json(PATHS.SPRITESHEETS / "slime-green-right.json")
@@ -76,5 +99,33 @@ class MainMenu(Menu):
 
 
 class PauseMenu(Menu):
-    def __init__(self, screen: pygame.Surface, clock: pygame.time.Clock, buttons):
+    def __init__(
+            self,
+            screen: pygame.Surface,
+            clock: pygame.time.Clock,
+            buttons: Button = None,
+    ):
+        if buttons is None:
+            buttons = [
+                Button(
+                    (0, H / 2, 600, 100),
+                    color=(100, 100, 250),
+                    label="PLAY",
+                    on_click=[lambda _, menu: menu.stop]
+                ),
+                Button(
+                    (0, H / 2 + 130, 600, 100),
+                    color=(100, 100, 250),
+                    label="EXIT",
+                    on_click=[Button.put_exit]
+                )
+            ]
         super().__init__(screen, clock, buttons)
+        darken_surface = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
+        darken_surface.set_alpha(20)
+        self.screen.blit(darken_surface, (0, 0))
+
+    def draw(self):
+        for button in sorted(self.buttons, key=attrgetter("rect.left")):
+            button.draw(self.screen)
+        pygame.display.update()
