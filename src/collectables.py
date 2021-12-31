@@ -105,34 +105,3 @@ class Collectables(List[List[int]]):
             ],
             False,
         )
-
-    # def draw_labels(self, surface: pygame.surface.Surface):
-    #     # dont say a word about my **awesome** code
-    #     x = [0]
-    #     for i in (2, 4):
-    #         x.append(CODE[i].get_width())
-    #     x[2] += x[1]
-    #     surface.blits(
-    #         (
-    #             (CODE[[2, 4, 6][i]], [x[i], H - CODE[[2, 4, 6][i]].get_height()])
-    #             for i in range(3)
-    #         ),
-    #         False,
-    #     )
-    #     clr = (50, 50, 50)
-    #     surface.blit(
-    #         Fonts.pixel_font.render(str(self.uranium_count), True, clr),
-    #         (30, H - Fonts.pixel_font.render(str(self.uranium_count), True, clr).get_height() - 7 + 5),
-    #     )
-    #     surface.blit(
-    #         Fonts.pixel_font.render(str(self.californium_count), True, clr),
-    #         (95, H - Fonts.pixel_font.render(str(self.californium_count), True, clr).get_height() - 7 + 5),
-    #     )
-    #     surface.blit(
-    #         Fonts.pixel_font.render(str(self.thorium_count), True, clr),
-    #         (160, H - Fonts.pixel_font.render(str(self.thorium_count), True, clr).get_height() - 7 + 5),
-    #     )
-    #
-    # @property
-    # def is_eligible_for_dna(self):
-    #     return self.uranium_count >= 3 and self.thorium_count >= 2 and self.californium_count >= 1
