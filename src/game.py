@@ -75,7 +75,6 @@ class Game:
             self.collectables.thorium_count -= 2
             self.collectables.californium_count -= 1
             self.DNA_count += 1
-        print(self.DNA_count)
 
     def update(self) -> None:
         self.player.update(self.tilemap, self.dt)
@@ -121,6 +120,7 @@ class Game:
         self.player.draw(self.WIN)
         self.collectables.draw_elements(self.WIN)
         self.enemies.draw(self.WIN)
+        self.enemies.draw_health(self.WIN)
 
         for i, [enemy, surf, pos, vel, last_frame, type_, call] in sorted(enumerate(self.bullets), reverse=True):
             if last_frame == self.frame_count:

@@ -12,6 +12,7 @@ rand = random.random
 CHANCE_FOR_MOB = 0.97
 is_mob = (lambda: rand() > CHANCE_FOR_MOB)
 
+MAX_HEALTH = 4
 
 ATTACKS = {
     "electro": SpriteSheets.Bullets.electro,
@@ -263,7 +264,7 @@ class MobManager(List[Monster]):  # karen style
                         rep = 7
                         c = random.choice(["left", "right", "up", "down"])
                         p = (j*TL_W + SCIENTIST_SIZE[0], i*TL_H + SCIENTIST_SIZE[1]) if c in "up|down" else (j*TL_W, i*TL_H)
-                        self.append(Monster(p, *SCIENTIST_SIZE, 4, {
+                        self.append(Monster(p, *SCIENTIST_SIZE, MAX_HEALTH, {
                                         "right": SpriteSheets.Scientist.WalkRight.get_animation(repeat=rep),
                                         "left": SpriteSheets.Scientist.WalkLeft.get_animation(repeat=rep),
                                         "up": SpriteSheets.Scientist.WalkUp.get_animation(repeat=rep),
@@ -306,3 +307,12 @@ class MobManager(List[Monster]):  # karen style
             if player.rect.colliderect((pp.topleft + o, SCIENTIST_SIZE)):
                 return en
         return None
+
+    def draw_health(self, surface: pygame.surface.Surface):
+        for en in self:
+            if en.ded: continue
+            r = pygame.Rect(en.rect.topleft + self.tm.offset, (SCIENTIST_SIZE[0], 3))
+            r.y -= 5
+            pygame.draw.rect(surface, (255, 0, 0), r)
+            r.w *= en.life / MAX_HEALTH
+            pygame.draw.rect(surface, (0, 255, 0), r)
