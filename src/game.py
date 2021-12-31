@@ -2,12 +2,16 @@ import sys
 import time
 
 import pygame
+import random
+from typing import *
 
+from src.button import Button
 from src.collectables import Collectables
-from src.fog import *
-from src.mobs import *
+from src.data import *
+from src.utils import *
+from src.fog import Fog
+from src.mobs import Player, Monster, MobManager
 from src.tilemap import TileMap
-
 
 class Game:
     def __init__(self, screen: pygame.surface.Surface, clock: pygame.time.Clock):
@@ -43,8 +47,8 @@ class Game:
         self.fog: Fog = Fog()
         self.fog.from_tilemap(self.tilemap)
 
-        self.elements: Collectables = Collectables()
-        self.elements.from_tilemap(self.tilemap)
+        self.collectables: Collectables = Collectables()
+        self.collectables.from_tilemap(self.tilemap)
 
         self.enemies: MobManager = MobManager()
         self.enemies.from_tilemap(self.tilemap)
@@ -52,16 +56,32 @@ class Game:
 
         # enemy, surf, pos, vel, last_frame_to_be_alive, callable
         self.bullets: List[
-            List[Union[Monster, pygame.surface.Surface, pygame.math.Vector2, pygame.math.Vector2, int, ...]]
+            List[Union[Monster, pygame.surface.Surface, pygame.math.Vector2, pygame.math.Vector2, int, type(lambda x: None)]]
         ] = []
 
+        self.DNA_button: Button = Button(
+            pygame.Rect(ELEMENT_DISPLAY_SIZE[0]*3 + 4, H - ELEMENT_DISPLAY_SIZE[1] + 5, 32, 32),
+            images=[Images.DNA],
+            on_click=[self.collectable_to_dna]
+        )
+
+        self.DNA_count: int = 0
+
         pygame.display.set_caption(NAME)
+
+    def collectable_to_dna(self, _=None):
+        if self.collectables.is_eligible_for_dna:
+            self.collectables.uranium_count -= 3
+            self.collectables.thorium_count -= 2
+            self.collectables.californium_count -= 1
+            self.DNA_count += 1
+        print(self.DNA_count)
 
     def update(self) -> None:
         self.player.update(self.tilemap, self.dt)
         self.enemies.update(self.dt)
         self.fog.update(self.player)
-        self.elements.update(self.player)
+        self.collectables.update(self.player)
 
         enemy = self.enemies.check_player(self.player)
         if enemy is not None and not enemy.ded:
@@ -74,6 +94,7 @@ class Game:
     def event_handler(self) -> None:
         keys = pygame.key.get_pressed()
         for event in pygame.event.get():
+            self.DNA_button.handle_event(event)
             if event.type == pygame.QUIT or (
                 event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE
             ):
@@ -98,7 +119,7 @@ class Game:
 
         self.tilemap.draw(self.WIN)
         self.player.draw(self.WIN)
-        self.elements.draw_elements(self.WIN)
+        self.collectables.draw_elements(self.WIN)
         self.enemies.draw(self.WIN)
 
         for i, [enemy, surf, pos, vel, last_frame, type_, call] in sorted(enumerate(self.bullets), reverse=True):
@@ -159,7 +180,14 @@ class Game:
             self.WIN.blit(surf, pos)
 
         self.fog.draw(self.WIN)  # the fog to hid uncovered areas
-        self.elements.draw_labels(self.WIN)  # basic UI
+        self.collectables.draw_labels(self.WIN)  # basic UI
+
+        self.DNA_button.draw(self.WIN)
+
+        self.WIN.blit(
+            Fonts.pixel_font.render(number_format(self.DNA_count, 2), True, (70, 70, 70)),
+            (ELEMENT_DISPLAY_SIZE[0]*3 + 4, H - ELEMENT_DISPLAY_SIZE[1] + 45)
+        )
 
         pygame.display.update()
 

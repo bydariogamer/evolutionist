@@ -33,8 +33,6 @@ CODE = {
     6: SpriteSheets.Elements.thorium_display,
 }
 
-font = pygame.font.Font(PATHS.DATA / "fonts" / "pixelFont.ttf", 20)
-
 
 class Collectables(List[List[int]]):
     def from_tilemap(self, tilemap: tmx.TileMap):
@@ -126,14 +124,18 @@ class Collectables(List[List[int]]):
         )
         clr = (50, 50, 50)
         surface.blit(
-            font.render(str(self.uranium_count), True, clr),
-            (30, H - font.render(str(self.uranium_count), True, clr).get_height() - 7 + 5),
+            Fonts.pixel_font.render(str(self.uranium_count), True, clr),
+            (30, H - Fonts.pixel_font.render(str(self.uranium_count), True, clr).get_height() - 7 + 5),
         )
         surface.blit(
-            font.render(str(self.californium_count), True, clr),
-            (95, H - font.render(str(self.californium_count), True, clr).get_height() - 7 + 5),
+            Fonts.pixel_font.render(str(self.californium_count), True, clr),
+            (95, H - Fonts.pixel_font.render(str(self.californium_count), True, clr).get_height() - 7 + 5),
         )
         surface.blit(
-            font.render(str(self.thorium_count), True, clr),
-            (160, H - font.render(str(self.thorium_count), True, clr).get_height() - 7 + 5),
+            Fonts.pixel_font.render(str(self.thorium_count), True, clr),
+            (160, H - Fonts.pixel_font.render(str(self.thorium_count), True, clr).get_height() - 7 + 5),
         )
+
+    @property
+    def is_eligible_for_dna(self):
+        return self.uranium_count >= 3 and self.thorium_count >= 2 and self.californium_count >= 1

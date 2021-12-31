@@ -291,3 +291,10 @@ def vector2_move_towards(
         return target
 
     return origin + delta / dist * speed
+
+
+def number_format(n: int, l: int) -> str:
+    ns = str(n)
+    if len(ns) < l:
+        return "0" * (l - len(ns)) + ns
+    return ns

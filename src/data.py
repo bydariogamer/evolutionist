@@ -30,7 +30,9 @@ BACKGROUND = pygame.Color(20, 20, 200)
 class PATHS:
     DATA: Path = Path(__file__).parent.parent / "data"
     SPRITESHEETS: Path = Path(__file__).parent.parent / "data" / "spritesheets"
+    SPRITES: Path = Path(__file__).parent.parent / "data" / "sprites"
     MAPS: Path = Path(__file__).parent.parent / "data" / "maps"
+    FONTS: Path = Path(__file__).parent.parent / "data" / "fonts"
 
 
 class BaseAnimation:  # abstract class
@@ -509,3 +511,12 @@ class SpriteSheets:
         ice = pygame.transform.scale(sheet.clip(data["ice"]), BULLET_SIZE)
         fire = pygame.transform.scale(sheet.clip(data["fire"]), BULLET_SIZE)
         acid = pygame.transform.scale(sheet.clip(data["acid"]), BULLET_SIZE)
+
+
+class Images:
+    DNA = pygame.image.load(PATHS.SPRITES / "DNA.png").convert_alpha()
+    TABLE = pygame.image.load(PATHS.SPRITES / "table.png").convert_alpha()
+
+
+class Fonts:
+    pixel_font = pygame.font.Font(PATHS.FONTS / "pixelFont.ttf", 20)
