@@ -32,7 +32,7 @@ class Game:
 
         pygame.display.set_caption(NAME)
 
-    def initialize(self, path: str):
+    def initialize(self, path: Union[str, Path]):
         self.tilemap: TileMap = TileMap()
         self.tilemap.load(PATHS.MAPS / path)
 
