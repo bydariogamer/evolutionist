@@ -28,7 +28,7 @@ class Game:
         self.last_time: float = time.time()  # bad
         self.dt: float = 0
         
-        self.initialize(PATHS.MAPS / "level1.csv")
+        self.initialize(PATHS.MAPS / "level5.csv")
 
         pygame.display.set_caption(NAME)
 
