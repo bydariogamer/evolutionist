@@ -9,7 +9,7 @@ import math
 
 
 rand = random.random
-CHANCE_FOR_MOB = 0.97
+CHANCE_FOR_MOB = 0.9
 is_mob = (lambda: rand() > CHANCE_FOR_MOB)
 
 MAX_HEALTH = 4
@@ -309,6 +309,8 @@ class MobManager(List[Monster]):  # karen style
         return None
 
     def draw_health(self, surface: pygame.surface.Surface):
+        """draw health bar, simple stupid"""
+        # i dont want to hear anything for my code
         for en in self:
             if en.ded: continue
             r = pygame.Rect(en.rect.topleft + self.tm.offset, (SCIENTIST_SIZE[0], 3))

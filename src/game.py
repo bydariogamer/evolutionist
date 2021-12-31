@@ -13,6 +13,7 @@ from src.fog import Fog
 from src.mobs import Player, Monster, MobManager
 from src.tilemap import TileMap
 
+
 class Game:
     def __init__(self, screen: pygame.surface.Surface, clock: pygame.time.Clock):
         self.WIN: pygame.surface.Surface = screen
@@ -59,15 +60,13 @@ class Game:
             List[Union[Monster, pygame.surface.Surface, pygame.math.Vector2, pygame.math.Vector2, int, type(lambda x: None)]]
         ] = []
 
-        self.DNA_button: Button = Button(
-            pygame.Rect(ELEMENT_DISPLAY_SIZE[0]*3 + 4, H - ELEMENT_DISPLAY_SIZE[1] + 5, 32, 32),
-            images=[Images.DNA],
-            on_click=[self.collectable_to_dna]
-        )
-
         self.DNA_count: int = 0
 
         pygame.display.set_caption(NAME)
+
+    @property
+    def is_level_finished(self):
+        return all(en.ded for en in self.enemies) and not self.collectables
 
     def collectable_to_dna(self, _=None):
         if self.collectables.is_eligible_for_dna:
@@ -93,7 +92,6 @@ class Game:
     def event_handler(self) -> None:
         keys = pygame.key.get_pressed()
         for event in pygame.event.get():
-            self.DNA_button.handle_event(event)
             if event.type == pygame.QUIT or (
                 event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE
             ):
@@ -110,6 +108,22 @@ class Game:
                     else:  # triggered only when the for loop didnt hit a break statement
                         if enemy is not None:
                             self.enemies.attack(enemy, self.player.power, self)
+
+                    # check for the DNA point system
+                    x, y = event.pos
+                    if x <= ELEMENT_DISPLAY_SIZE[0] * 3 and y >= H - ELEMENT_DISPLAY_SIZE[1]:
+                        if x <= ELEMENT_DISPLAY_SIZE[0] * 1:
+                            if self.collectables.uranium_count >= 1:
+                                self.collectables.uranium_count -= 1
+                                self.DNA_count += 1
+                        if x <= ELEMENT_DISPLAY_SIZE[0] * 2:
+                            if self.collectables.californium_count >= 1:
+                                self.collectables.californium_count -= 1
+                                self.DNA_count += 3
+                        if x <= ELEMENT_DISPLAY_SIZE[0] * 3:
+                            if self.collectables.thorium_count >= 1:
+                                self.collectables.thorium_count -= 1
+                                self.DNA_count += 2
 
         self.player.handle_keys(keys)
 
@@ -182,8 +196,10 @@ class Game:
         self.fog.draw(self.WIN)  # the fog to hid uncovered areas
         self.collectables.draw_labels(self.WIN)  # basic UI
 
-        self.DNA_button.draw(self.WIN)
+        # DNA number count
+        self.WIN.blit(Images.DNA, (ELEMENT_DISPLAY_SIZE[0]*3 + 4, H - ELEMENT_DISPLAY_SIZE[1] + 5))
 
+        # DNA image
         self.WIN.blit(
             Fonts.pixel_font.render(number_format(self.DNA_count, 2), True, (70, 70, 70)),
             (ELEMENT_DISPLAY_SIZE[0]*3 + 4, H - ELEMENT_DISPLAY_SIZE[1] + 45)
