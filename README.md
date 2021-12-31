@@ -13,5 +13,8 @@
 
 ## byda:
 - make the menus
+  - main menu
+  - pause menu
+  - game over menu
 - ~~make the scientist look front and back~~
 - ~~make some tables for the room~~
