@@ -120,54 +120,17 @@ class Game:
                 call()
                 enemy.stop_idle()
                 if enemy.ded:
-                    if type_ == "electro":
-                        if enemy.state in "up|down":
-                            ani = random.choice([
-                                SpriteSheets.Scientist.DeathAnimations.ElectrifiedRight.get_animation,
-                                SpriteSheets.Scientist.DeathAnimations.ElectrifiedLeft.get_animation
-                            ])(repeat=10)
-                        else:
-                            ani = {
-                                "right": SpriteSheets.Scientist.DeathAnimations.ElectrifiedRight.get_animation,
-                                "left": SpriteSheets.Scientist.DeathAnimations.ElectrifiedLeft.get_animation
-                            }[enemy.state](repeat=10)
-                    elif type_ == "ice":
-                        if enemy.state in "up|down":
-                            ani = random.choice([
-                                SpriteSheets.Scientist.DeathAnimations.FreezingRight.get_animation,
-                                SpriteSheets.Scientist.DeathAnimations.FreezingLeft.get_animation
-                            ])(repeat=10)
-                        else:
-                            ani = {
-                                "right": SpriteSheets.Scientist.DeathAnimations.FreezingRight.get_animation,
-                                "left": SpriteSheets.Scientist.DeathAnimations.FreezingLeft.get_animation
-                            }[enemy.state](repeat=10)
-                    elif type_ == "fire":
-                        if enemy.state in "up|down":
-                            ani = random.choice([
-                                SpriteSheets.Scientist.DeathAnimations.OnFireRight.get_animation,
-                                SpriteSheets.Scientist.DeathAnimations.OnFireLeft.get_animation
-                            ])(repeat=10)
-                        else:
-                            ani = {
-                                "right": SpriteSheets.Scientist.DeathAnimations.OnFireRight.get_animation,
-                                "left": SpriteSheets.Scientist.DeathAnimations.OnFireLeft.get_animation
-                            }[enemy.state](repeat=10)
-                    elif type_ == "acid":
-                        if enemy.state in "up|down":
-                            ani = random.choice([
-                                SpriteSheets.Scientist.DeathAnimations.AcidRight.get_animation,
-                                SpriteSheets.Scientist.DeathAnimations.AcidLeft.get_animation
-                            ])(repeat=10)
-                        else:
-                            ani = {
-                                "right": SpriteSheets.Scientist.DeathAnimations.AcidRight.get_animation,
-                                "left": SpriteSheets.Scientist.DeathAnimations.AcidLeft.get_animation
-                            }[enemy.state](repeat=10)
-                    else:
-                        print(f"unknown animation type '{type_}'")
+                    animation_type = {
+                        "electric": "Electrified",
+                        "ice": "Freezing",
+                        "fire": "OnFire",
+                        "acid": "Acid"
+                    }[type_] + {
+                        "right": "Left",
+                        "left": "Right"
+                    }[enemy.state if enemy.state in {"right", "left"} else random.choice(["right", "left"])]
 
-                    enemy.animation_dict["ded"] = ani
+                    enemy.animation_dict["ded"] = getattr(SpriteSheets.Scientist.DeathAnimations, animation_type).get_animation(repeat=10)
                     enemy.state = "ded"
             self.screen.blit(surf, pos)
 
@@ -186,7 +149,6 @@ class Game:
             self.dt *= self.FPS
             self.last_time = time.time()
 
-            self.clock.tick(self.FPS)
             self.event_handler()  # input
             self.update()  # process
             self.draw()  # show
