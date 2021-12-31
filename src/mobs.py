@@ -15,7 +15,7 @@ is_mob = (lambda: rand() > CHANCE_FOR_MOB)
 MAX_HEALTH = 4
 
 ATTACKS = {
-    "electro": SpriteSheets.Bullets.electro,
+    "electric": SpriteSheets.Bullets.electro,
     "ice": SpriteSheets.Bullets.ice,
     "fire": SpriteSheets.Bullets.fire,
     "acid": SpriteSheets.Bullets.acid
@@ -85,7 +85,13 @@ class Player(Mob):
         initial_state: ...,
     ):
         super().__init__(pos, *size, life, sprite_dict, initial_state)
-        self.power: float = 1
+        self.mutations = {
+            "ICE_SPIT": False,
+            "ELECTRIC_SPIT": False,
+            "FIRE_SPIT": False,
+            "GIGANTIC": False,
+            "RETROTRANSCRIPTASE": False,
+        }
 
     def handle_keys(self, keys: Sequence[bool]):
         left = keys[pygame.K_a] or keys[pygame.K_LEFT]
@@ -132,6 +138,28 @@ class Player(Mob):
         tilemap.offset.y -= displacement
 
         self.vel *= 0
+
+    @property
+    def attack(self):
+        if self.mutations["FIRE_SPIT"]:
+            return "fire"
+        elif self.mutations["ELECTRIC_SPIT"]:
+            return "electric"
+        elif self.mutations["ICE_SPIT"]:
+            return "ice"
+        else:
+            return "acid"
+
+    @property
+    def power(self):
+        if self.attack == "fire":
+            return 4
+        elif self.attack == "electric":
+            return 3
+        elif self.attack == "ice":
+            return 2
+        else:
+            return 1
 
 
 class Monster(Mob):

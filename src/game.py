@@ -104,8 +104,8 @@ class Game:
                     enemy = self.player.check_enemies(self.enemies, pygame.math.Vector2(event.pos))
                     # check if the enemy is already under attack so it is "fair"
                     for [en, surf, pos, vel, last_frame, type_, call] in self.bullets:
-                        if en is enemy: break
-
+                        if en is enemy:
+                            break
                     # add the enemy in the bullets lists
                     else:  # triggered only when the for loop didnt hit a break statement
                         if enemy is not None:
