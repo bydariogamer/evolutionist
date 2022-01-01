@@ -12,7 +12,7 @@ rand = random.random
 CHANCE_FOR_MOB = 0.9
 is_mob = (lambda: rand() > CHANCE_FOR_MOB)
 
-MAX_HEALTH = 4
+MAX_HEALTH = 0
 
 ATTACKS = {
     "electric": SpriteSheets.Bullets.electro,
@@ -288,7 +288,7 @@ class MobManager(List[Monster]):  # karen style
     def from_tilemap(self, tilemap: tmx.TileMap, level):
         self.tm = tilemap
         self.clear()
-        self.max_life = 3 + level
+        self.max_life = MAX_HEALTH + level
         for i, row in enumerate(self.tm):
             for j, tile in enumerate(row):
                 if tile in tmx.CODE:

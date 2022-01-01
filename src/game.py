@@ -27,7 +27,7 @@ class Game:
         self.last_time: float = time.time()  # bad
         self.dt: float = 0
 
-        self.current_level: int = 6
+        self.current_level: int = 1
 
         self.tilemap: TileMap = TileMap()
         self.player: Player = Player(
@@ -52,11 +52,13 @@ class Game:
                 Monster, pygame.surface.Surface, pygame.math.Vector2, pygame.math.Vector2, int, type(lambda x: None)]]
         ] = []
 
-        self.initialize(PATHS.MAPS / f"level{self.current_level}.csv")
+        self.initialize()
 
         pygame.display.set_caption(NAME)
 
-    def initialize(self, path: Union[str, Path]):
+    def initialize(self, path: Union[str, Path] = None):
+        if path is None:
+            path = PATHS.MAPS / f"level{self.current_level}.csv"
         self.tilemap.load(PATHS.MAPS / path)
         self.fog.from_tilemap(self.tilemap)
         self.collectables.from_tilemap(self.tilemap)
@@ -121,16 +123,18 @@ class Game:
                 enemy.stop_idle()
                 if enemy.ded:
                     animation_type = {
-                        "electric": "Electrified",
-                        "ice": "Freezing",
-                        "fire": "OnFire",
-                        "acid": "Acid"
-                    }[type_] + {
-                        "right": "Right",
-                        "left": "Left"
-                    }[enemy.state if enemy.state in {"right", "left"} else random.choice(["right", "left"])]
+                                         "electric": "Electrified",
+                                         "ice": "Freezing",
+                                         "fire": "OnFire",
+                                         "acid": "Acid"
+                                     }[type_] + {
+                                         "right": "Right",
+                                         "left": "Left"
+                                     }[enemy.state if enemy.state in {"right", "left"} else random.choice(
+                        ["right", "left"])]
 
-                    enemy.animation_dict["ded"] = getattr(SpriteSheets.Scientist.DeathAnimations, animation_type).get_animation(repeat=10)
+                    enemy.animation_dict["ded"] = getattr(SpriteSheets.Scientist.DeathAnimations,
+                                                          animation_type).get_animation(repeat=10)
                     enemy.state = "ded"
             self.screen.blit(surf, pos)
 
@@ -139,7 +143,8 @@ class Game:
 
         # DNA number count
         self.screen.blit(Images.DNA, (5, H - Images.DNA.get_size()[1] - 5))
-        self.screen.blit(text(str(self.player.mutation_points), (20, 250, 20)), (10 + Images.DNA.get_size()[1], H - Images.DNA.get_size()[1]))
+        self.screen.blit(text(str(self.player.mutation_points), (20, 250, 20)),
+                         (10 + Images.DNA.get_size()[1], H - Images.DNA.get_size()[1]))
 
         pygame.display.update()
 
@@ -152,5 +157,9 @@ class Game:
             self.event_handler()  # input
             self.update()  # process
             self.draw()  # show
+            if self.is_level_finished:
+                self.current_level += 1
+                print("LEVEL ENDED")
+                self.initialize()
 
             self.frame_count += 1
