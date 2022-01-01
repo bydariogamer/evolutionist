@@ -113,7 +113,6 @@ class Player(Mob):
             self.vel.y = self.SPEED
         if self.mutations["SLIPPERY_SLOBBER"]:
             self.vel *= 1 + 1/5
-            print(self.vel)
 
     def check_enemies(self, enemies: "MobManager", pos: pygame.math.Vector2) -> Optional["Monster"]:
         off = enemies.tm.offset  # quality so shush
