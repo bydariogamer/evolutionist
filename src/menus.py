@@ -5,7 +5,7 @@ from itertools import cycle
 import pygame
 
 import src.mobs
-from src.data import FPS, BACKGROUND, PATHS, H
+from src.data import FPS, BACKGROUND, PATHS, W, H
 from src.utils import text, load_json
 from src.spritesheet import SpriteSheet
 from src.button import Button
@@ -110,12 +110,12 @@ class PauseMenu(Menu):
         if buttons is None:
             buttons = [
                 Button(
-                    (0, H / 2, 600, 100),
+                    (W / 2 - 300, H / 2, 600, 100),
                     color=(100, 100, 250),
                     label="CONTINUE",
                 ),
                 Button(
-                    (0, H / 2 + 130, 600, 100),
+                    (W / 2 - 300, H / 2 + 130, 600, 100),
                     color=(100, 100, 250),
                     label="EXIT",
                     on_click=[Button.put_exit]
@@ -141,6 +141,7 @@ class PauseMenu(Menu):
                     self.stop()
 
     def draw(self):
+        self.screen.blit(text("PAUSE", (200, 20, 0), 120), (400, 200))
         for button in sorted(self.buttons, key=attrgetter("rect.left")):
             button.draw(self.screen)
         pygame.display.update()
