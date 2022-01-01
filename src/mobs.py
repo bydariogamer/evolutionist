@@ -237,7 +237,7 @@ class MobManager(List[Monster]):  # karen style
         :return:
         """
         off = self.tm.offset
-        max_distance = 200
+        max_distance = 150
         for i in sorted(range(len(self)), reverse=True):
             en = self[i]
             rr = pygame.Rect(en.rect)
