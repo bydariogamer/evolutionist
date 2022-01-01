@@ -39,6 +39,7 @@ class TileMap(List[List[int]]):
         self.empty_tiles: List[pygame.Rect] = []
 
     def load(self, path):
+        self.offset *= 0
         with open(path, "r") as f:
             self.clear()
             self.empty_tiles.clear()
