@@ -45,9 +45,9 @@ class Collectables(List[List[int]]):
                     if is_el():
                         self[~0].append(what_el())
                     else:
-                        self[~0].append(-1)
+                        self[~0].append(0)
                 else:
-                    self[~0].append(-1)
+                    self[~0].append(0)
 
     @property
     def offset(self):
@@ -77,7 +77,7 @@ class Collectables(List[List[int]]):
                         player.mutation_points += 2
                     elif v == 5:
                         player.mutation_points += 3
-                    self[i][j] = -1
+                    self[i][j] = 0
 
     def draw_elements(self, surface: pygame.surface.Surface):
         x, y = self.offset

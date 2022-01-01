@@ -67,7 +67,7 @@ class Game:
 
     @property
     def is_level_finished(self):
-        return all(en.ded for en in self.enemies) if self.enemies else True
+        return all(en.ded for en in self.enemies) if self.enemies else True and not sum(sum(j for j in row) for row in self.collectables)
 
     def update(self) -> None:
         self.player.update(self.tilemap, self.dt)
