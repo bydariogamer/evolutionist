@@ -9,7 +9,7 @@ import math
 
 
 rand = random.random
-CHANCE_FOR_MOB = 0.99
+CHANCE_FOR_MOB = 0.95
 is_mob = (lambda: rand() > CHANCE_FOR_MOB)
 
 MAX_HEALTH = 1

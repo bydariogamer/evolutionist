@@ -27,7 +27,7 @@ class Game:
         self.last_time: float = time.time()  # bad
         self.dt: float = 0
 
-        self.current_level: int = 0
+        self.current_level: int = 1
 
         self.tilemap: TileMap = TileMap()
         self.player: Player = Player(
@@ -67,7 +67,7 @@ class Game:
 
     @property
     def is_level_finished(self):
-        return all(en.ded for en in self.enemies) and not self.collectables
+        return all(en.ded for en in self.enemies)
 
     def update(self) -> None:
         self.player.update(self.tilemap, self.dt)
@@ -157,6 +157,7 @@ class Game:
             self.event_handler()  # input
             self.update()  # process
             self.draw()  # show
+            print(self.is_level_finished)
             if self.is_level_finished:
                 self.current_level += 1
                 print("LEVEL ENDED")
