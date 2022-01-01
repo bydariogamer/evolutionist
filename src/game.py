@@ -27,7 +27,7 @@ class Game:
         self.last_time: float = time.time()  # bad
         self.dt: float = 0
 
-        self.current_level: int = 1
+        self.current_level: int = 0
 
         self.tilemap: TileMap = TileMap()
         self.player: Player = Player(
@@ -67,7 +67,7 @@ class Game:
 
     @property
     def is_level_finished(self):
-        return all(en.ded for en in self.enemies)
+        return all(en.ded for en in self.enemies) if self.enemies else True
 
     def update(self) -> None:
         self.player.update(self.tilemap, self.dt)
@@ -150,7 +150,7 @@ class Game:
 
     def run(self) -> None:
         while self.running:
-            self.dt = time.time() - self.last_time
+            self.dt = self.clock.tick(FPS) / 1000.0
             self.dt *= self.FPS
             self.last_time = time.time()
 
