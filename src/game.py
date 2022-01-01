@@ -149,6 +149,7 @@ class Game:
         pygame.display.update()
 
     def run(self) -> None:
+        from src.menus import ShopMenu
         while self.running:
             self.dt = self.clock.tick(FPS) / 1000.0
             self.dt *= self.FPS
@@ -159,6 +160,7 @@ class Game:
             self.draw()  # show
             if self.is_level_finished:
                 print(f"level {self.current_level} ended")
+                ShopMenu(self.screen, self.clock, self.player).loop()
                 self.current_level += 1
                 self.initialize()
 

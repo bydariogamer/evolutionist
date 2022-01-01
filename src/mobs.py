@@ -91,7 +91,7 @@ class Player(Mob):
             "FIRE_SPIT": False,
             "COMPOUND_EYES": False,
             "SLIPPERY_SLOBBER": False,
-            "RETROTRANSCRIPTASE": False,
+            "REVERSE_TRANSCRIPTASE": False,
         }
         self.mutation_points = 0
 
@@ -275,7 +275,7 @@ class MobManager(List[Monster]):  # karen style
                 velocity,
                 lambda: setattr(enemy, "ded", True)
             )
-            if player.mutations["RETROTRANSCRIPTASE"]:
+            if player.mutations["REVERSE_TRANSCRIPTASE"]:
                 player.mutation_points += 1
             return
 

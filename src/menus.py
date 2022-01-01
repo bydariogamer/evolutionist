@@ -152,8 +152,9 @@ class ShopMenu(Menu):
             "ICE_SPIT": 50,
             "ELECTRIC_SPIT": 100,
             "FIRE_SPIT": 200,
-            "GIGANTIC": 400,
-            "RETROTRANSCRIPTASE": 300,
+            "COMPOUND_EYES": 150,
+            "SLIPPERY_SLOBBER": 200,
+            "REVERSE_TRANSCRIPTASE": 300,
         }
 
     def __init__(
@@ -167,15 +168,53 @@ class ShopMenu(Menu):
         if buttons is None:
             buttons = [
                 Button(
-                    (0, H / 2, 600, 100),
+                    (100, 10, 600, 100),
                     color=(100, 100, 250),
-                    label="CONTINUE",
+                    label="ICE_SPIT: frozen your enemies (50)",
                 ),
                 Button(
-                    (0, H / 2 + 130, 600, 100),
+                    (100, 100, 600, 100),
+                    color=(100, 100, 250),
+                    label="ELECTRIC_SPIT: give the scientists some volts (100)",
+                ),
+                Button(
+                    (100, 200, 600, 90),
+                    color=(100, 100, 250),
+                    label="FIRE_SPIT: spit fireballs (200)",
+                ),
+                Button(
+                    (100, 300, 600, 90),
+                    color=(100, 100, 250),
+                    label="COMPOUND_EYES: you will see better in the dark (150)",
+                ),
+                Button(
+                    (100, 400, 600, 90),
+                    color=(100, 100, 250),
+                    label="SLIPPERY_SLOBBER: run faster from danger (200)",
+                ),
+                Button(
+                    (100, 500, 600, 90),
+                    color=(100, 100, 250),
+                    label="REVERSE_TRANSCRIPTASE: get points for deaths (300)",
+                ),
+                Button(
+                    (100, 600, 600, 90),
                     color=(100, 100, 250),
                     label="EXIT",
-                    on_click=[Button.put_exit]
-                )
+                ),
             ]
         super().__init__(screen, clock, buttons)
+
+    def handle_events(self, events=None):
+        if events is None:
+            events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.QUIT:
+                sys.exit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                self.stop()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if self.buttons[0].rect.collidepoint(event.pos):
+                    if not self.player.mutations["ICE_SPIT"] and self.player.mutation_points > self.PRICES["ICE_SPIT"]:
+                        self.player.mutations["ICE_SPIT"] = True
+                        self.player.mutation_points -= self.PRICES["ICE_SPIT"]
