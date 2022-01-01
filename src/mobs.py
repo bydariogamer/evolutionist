@@ -1,11 +1,12 @@
 from itertools import cycle
+from typing import *
+import random
+
+import pygame
+
 import src.tilemap as tmx  # i have no idea of there is anything package with that name ¯\_(ツ)_/¯
 from src.utils import *
 from src.data import *
-from typing import *  # shush
-import random
-import pygame
-import math
 
 
 rand = random.random
