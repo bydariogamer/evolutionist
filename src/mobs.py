@@ -89,7 +89,8 @@ class Player(Mob):
             "ICE_SPIT": False,
             "ELECTRIC_SPIT": False,
             "FIRE_SPIT": False,
-            "GIGANTIC": False,
+            "COMPOUND_EYES": False,
+            "SLIPPERY_SLOBBER": False,
             "RETROTRANSCRIPTASE": False,
         }
         self.mutation_points = 0

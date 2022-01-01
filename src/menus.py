@@ -4,6 +4,7 @@ from itertools import cycle
 
 import pygame
 
+import src.mobs
 from src.data import FPS, BACKGROUND, PATHS, H
 from src.utils import text, load_json
 from src.spritesheet import SpriteSheet
@@ -143,3 +144,37 @@ class PauseMenu(Menu):
         for button in sorted(self.buttons, key=attrgetter("rect.left")):
             button.draw(self.screen)
         pygame.display.update()
+
+
+class ShopMenu(Menu):
+    PRICES = {
+            "ICE_SPIT": 50,
+            "ELECTRIC_SPIT": 100,
+            "FIRE_SPIT": 200,
+            "GIGANTIC": 400,
+            "RETROTRANSCRIPTASE": 300,
+        }
+
+    def __init__(
+            self,
+            screen: pygame.Surface,
+            clock: pygame.time.Clock,
+            player: src.mobs.Player,
+            buttons: Button = None,
+    ):
+        self.player = player
+        if buttons is None:
+            buttons = [
+                Button(
+                    (0, H / 2, 600, 100),
+                    color=(100, 100, 250),
+                    label="CONTINUE",
+                ),
+                Button(
+                    (0, H / 2 + 130, 600, 100),
+                    color=(100, 100, 250),
+                    label="EXIT",
+                    on_click=[Button.put_exit]
+                )
+            ]
+        super().__init__(screen, clock, buttons)
