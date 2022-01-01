@@ -9,7 +9,7 @@ import math
 
 
 rand = random.random
-CHANCE_FOR_MOB = 0.9
+CHANCE_FOR_MOB = 0.99
 is_mob = (lambda: rand() > CHANCE_FOR_MOB)
 
 MAX_HEALTH = 0
@@ -274,6 +274,8 @@ class MobManager(List[Monster]):  # karen style
                 velocity,
                 lambda: setattr(enemy, "ded", True)
             )
+            if player.mutations["RETROTRANSCRIPTASE"]:
+                player.mutation_points += 1
             return
 
         def m_health():
