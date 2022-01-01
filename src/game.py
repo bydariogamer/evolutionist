@@ -27,7 +27,7 @@ class Game:
         self.last_time: float = time.time()  # bad
         self.dt: float = 0
 
-        self.current_level: int = 1
+        self.current_level: int = 0
 
         self.tilemap: TileMap = TileMap()
         self.player: Player = Player(

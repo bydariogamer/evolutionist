@@ -49,7 +49,8 @@ class Fog(List[List[int]]):
                     self[y + j][x + i] = 63
         for i in (-1, 0, 1):
             for j in (-1, 0, 1):
-                self[y + j][x + i] = 0
+                if x + i in range(len(self[i])) and y + j in range(len(self)):
+                    self[y + j][x + i] = 0
 
     def draw(self, surface: pygame.surface.Surface):
         x, y = self.offset

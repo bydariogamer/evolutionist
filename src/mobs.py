@@ -12,7 +12,7 @@ rand = random.random
 CHANCE_FOR_MOB = 0.9
 is_mob = (lambda: rand() > CHANCE_FOR_MOB)
 
-MAX_HEALTH = 0
+MAX_HEALTH = 1
 
 ATTACKS = {
     "electric": SpriteSheets.Bullets.electro,
