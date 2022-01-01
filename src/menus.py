@@ -112,7 +112,6 @@ class PauseMenu(Menu):
                     (0, H / 2, 600, 100),
                     color=(100, 100, 250),
                     label="CONTINUE",
-                    on_click=[press_escape],
                 ),
                 Button(
                     (0, H / 2 + 130, 600, 100),
@@ -144,9 +143,3 @@ class PauseMenu(Menu):
         for button in sorted(self.buttons, key=attrgetter("rect.left")):
             button.draw(self.screen)
         pygame.display.update()
-
-
-def press_escape(*args):
-    pygame.event.post(pygame.event.Event(pygame.K_ESCAPE))
-
-
