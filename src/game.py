@@ -60,7 +60,7 @@ class Game:
         self.tilemap.load(PATHS.MAPS / path)
         self.fog.from_tilemap(self.tilemap)
         self.collectables.from_tilemap(self.tilemap)
-        self.enemies.from_tilemap(self.tilemap)
+        self.enemies.from_tilemap(self.tilemap, self.current_level)
         self.enemies.good_start(self.player)
 
     @property

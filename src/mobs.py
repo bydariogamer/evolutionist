@@ -266,7 +266,7 @@ class MobManager(List[Monster]):  # karen style
 
         velocity = delta / dist * duration
 
-        attack = ATTACKS[player.attack]  # TODO: make this dynamic
+        attack = ATTACKS[player.attack]
 
         if enemy.life <= power:
             init_bul(
@@ -285,9 +285,10 @@ class MobManager(List[Monster]):  # karen style
             m_health
         )
 
-    def from_tilemap(self, tilemap: tmx.TileMap):
+    def from_tilemap(self, tilemap: tmx.TileMap, level):
         self.tm = tilemap
         self.clear()
+        self.max_life = 3 + level
         for i, row in enumerate(self.tm):
             for j, tile in enumerate(row):
                 if tile in tmx.CODE:
@@ -295,7 +296,7 @@ class MobManager(List[Monster]):  # karen style
                         rep = 7
                         c = random.choice(["left", "right", "up", "down"])
                         p = (j*TL_W + SCIENTIST_SIZE[0], i*TL_H + SCIENTIST_SIZE[1]) if c in "up|down" else (j*TL_W, i*TL_H)
-                        self.append(Monster(p, *SCIENTIST_SIZE, MAX_HEALTH, {
+                        self.append(Monster(p, *SCIENTIST_SIZE, self.max_life, {
                                         "right": SpriteSheets.Scientist.WalkRight.get_animation(repeat=rep),
                                         "left": SpriteSheets.Scientist.WalkLeft.get_animation(repeat=rep),
                                         "up": SpriteSheets.Scientist.WalkUp.get_animation(repeat=rep),
@@ -343,9 +344,10 @@ class MobManager(List[Monster]):  # karen style
         """draw health bar, simple stupid"""
         # i dont want to hear anything for my code
         for en in self:
-            if en.ded: continue
+            if en.ded:
+                continue
             r = pygame.Rect(en.rect.topleft + self.tm.offset, (SCIENTIST_SIZE[0], 3))
             r.y -= 5
             pygame.draw.rect(surface, (255, 0, 0), r)
-            r.w *= en.life / MAX_HEALTH
+            r.w *= en.life / self.max_life
             pygame.draw.rect(surface, (0, 255, 0), r)
