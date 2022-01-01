@@ -157,10 +157,9 @@ class Game:
             self.event_handler()  # input
             self.update()  # process
             self.draw()  # show
-            print(self.is_level_finished)
             if self.is_level_finished:
+                print(f"level {self.current_level} ended")
                 self.current_level += 1
-                print("LEVEL ENDED")
                 self.initialize()
 
             self.frame_count += 1
