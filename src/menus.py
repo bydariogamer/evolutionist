@@ -52,7 +52,7 @@ class Menu:
 
 
 class MainMenu(Menu):
-    TITLE = text("EVOLUTIONIST", (200, 30, 30), 150)
+    TITLE = text("EVOLUTIONIST", (30, 100, 30), 150)
     AUTHORS = text("by Emc235 & bydariogamer", (250, 40, 40), 30)
 
     def __init__(
@@ -90,8 +90,8 @@ class MainMenu(Menu):
 
     def draw(self):
         self.screen.fill(self.BACKGROUND)
-        self.screen.blit(self.TITLE, (10, 30))
-        self.screen.blit(self.AUTHORS, (50, 180))
+        self.screen.blit(self.TITLE, (15, 50))
+        self.screen.blit(self.AUTHORS, (50, 230))
         if not next(self.animation_limiter):
             self.last_anim = next(self.animation)
         self.screen.blit(self.last_anim, (800, 250))
