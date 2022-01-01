@@ -5,7 +5,6 @@ import pygame
 import random
 from typing import *
 
-from src.button import Button
 from src.collectables import Collectables
 from src.data import *
 from src.utils import *
@@ -89,8 +88,9 @@ class Game:
                 pygame.quit()
                 sys.exit()
             # TODO: implement pause menu
-            # elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            #     PauseMenu().loop()
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                from src.menus import PauseMenu
+                PauseMenu(self.screen, self.clock).loop()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     enemy = self.player.check_enemies(self.enemies, pygame.math.Vector2(event.pos))
