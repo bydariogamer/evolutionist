@@ -112,7 +112,6 @@ class PauseMenu(Menu):
                     (0, H / 2, 600, 100),
                     color=(100, 100, 250),
                     label="CONTINUE",
-                    on_click=[lambda _: pygame.event.post(pygame.event.Event(pygame.K_ESCAPE)), ],
                 ),
                 Button(
                     (0, H / 2 + 130, 600, 100),
@@ -122,8 +121,8 @@ class PauseMenu(Menu):
                 )
             ]
         super().__init__(screen, clock, buttons)
-        darken_surface = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
-        darken_surface.set_alpha(100)
+        darken_surface = pygame.Surface(screen.get_size())
+        darken_surface.set_alpha(200)
         self.screen.blit(darken_surface, (0, 0))
 
     def handle_events(self, events=None):
@@ -133,10 +132,12 @@ class PauseMenu(Menu):
             if event.type == pygame.QUIT:
                 sys.exit()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                print("I work")
                 self.stop()
             for button in sorted(self.buttons, key=attrgetter("rect.right")):
                 button.handle_event(event)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if self.buttons[0].rect.collidepoint(event.pos):
+                    self.stop()
 
     def draw(self):
         for button in sorted(self.buttons, key=attrgetter("rect.left")):

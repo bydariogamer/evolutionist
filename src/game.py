@@ -158,8 +158,8 @@ class Game:
             self.update()  # process
             self.draw()  # show
             if self.is_level_finished:
+                print(f"level {self.current_level} ended")
                 self.current_level += 1
-                print("LEVEL ENDED")
                 self.initialize()
 
             self.frame_count += 1
