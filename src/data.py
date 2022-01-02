@@ -33,13 +33,17 @@ flipy = partial(pygame.transform.flip, flip_x=False, flip_y=True)
 flipxy = partial(pygame.transform.flip, flip_x=True, flip_y=True)
 scale = pygame.transform.scale
 
-
 class PATHS:
     DATA: Path = Path(__file__).parent.parent / "data"
     SPRITESHEETS: Path = Path(__file__).parent.parent / "data" / "spritesheets"
     SPRITES: Path = Path(__file__).parent.parent / "data" / "sprites"
     MAPS: Path = Path(__file__).parent.parent / "data" / "maps"
     FONTS: Path = Path(__file__).parent.parent / "data" / "fonts"
+
+
+powerup_sound = pygame.mixer.Sound(PATHS.DATA / "SOUNDS" / "Powerup.wav")
+attack_sound = pygame.mixer.Sound(PATHS.DATA / "SOUNDS" / "attack.wav")
+pickup_sound = pygame.mixer.Sound(PATHS.DATA / "SOUNDS" / "pickup.wav")
 
 
 class BaseAnimation:  # abstract class

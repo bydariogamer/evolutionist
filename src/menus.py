@@ -5,7 +5,7 @@ from itertools import cycle
 import pygame
 
 import src.mobs
-from src.data import FPS, BACKGROUND, PATHS, W, H
+from src.data import FPS, BACKGROUND, PATHS, W, H, powerup_sound
 from src.utils import text, load_json
 from src.spritesheet import SpriteSheet
 from src.button import Button
@@ -95,7 +95,8 @@ class MainMenu(Menu):
         if not next(self.animation_limiter):
             self.last_anim = next(self.animation)
         self.screen.blit(self.last_anim, (800, 250))
-        for button in sorted(self.buttons, key=attrgetter("rect.left")):
+        # for button in sorted(self.buttons, key=attrgetter("rect.left")):
+        for button in self.buttons:
             button.draw(self.screen)
         pygame.display.update()
 
@@ -168,39 +169,70 @@ class ShopMenu(Menu):
         if buttons is None:
             buttons = [
                 Button(
-                    (100, 10, 600, 100),
+                    (100, 10, 700, 100),
                     color=(100, 100, 250),
-                    label="ICE_SPIT: frozen your enemies (50)",
+                    label="ICE_SPIT: frozen your enemies (50 DNA points)",
+                    on_click=[
+                        lambda _: None if player.mutation_points < 50 else player.mutations.__setitem__("FIRE_SPIT", True) is None and
+                                                                            setattr(player, "mutation_points", player.mutation_points - 50) is None and
+                                                                            powerup_sound.play() is not None and
+                                                                            setattr(self.buttons[~0], "label", f"DNA Points: {self.player.mutation_points}")
+                    ]
                 ),
                 Button(
-                    (100, 100, 600, 100),
+                    (100, 100, 700, 100),
                     color=(100, 100, 250),
-                    label="ELECTRIC_SPIT: give the scientists some volts (100)",
+                    label="ELECTRIC_SPIT: give the scientists some volts (100 DNA points)",
+                    on_click=[
+                        lambda _: None if player.mutation_points < 100 else player.mutations.__setitem__("ELECTRIC_SPIT", True) is None and
+                                                                            setattr(player, "mutation_points", player.mutation_points - 100) is None and
+                                                                            powerup_sound.play() is not None and
+                                                                            setattr(self.buttons[~0], "label", f"DNA Points: {self.player.mutation_points}")
+                    ]
                 ),
                 Button(
-                    (100, 200, 600, 90),
+                    (100, 200, 700, 90),
                     color=(100, 100, 250),
-                    label="FIRE_SPIT: spit fireballs (200)",
+                    label="FIRE_SPIT: spit fireballs (200 DNA points)",
+                    on_click=[
+                        lambda _: None if player.mutation_points < 200 else player.mutations.__setitem__("FIRE_SPIT", True) is None and
+                                                                            setattr(player, "mutation_points", player.mutation_points - 200) is None and
+                                                                            powerup_sound.play() is not None and
+                                                                            setattr(self.buttons[~0], "label", f"DNA Points: {self.player.mutation_points}")
+                    ]
                 ),
                 Button(
-                    (100, 300, 600, 90),
+                    (100, 400, 700, 90),
                     color=(100, 100, 250),
-                    label="COMPOUND_EYES: you will see better in the dark (150)",
+                    label="SLIPPERY_SLOBBER: run faster from danger (200 DNA points)",
+                    on_click=[
+                        lambda _: None if player.mutation_points < 200 else player.mutations.__setitem__("SLIPPERY_SLOBBER", True) is None and
+                                                                            setattr(player, "mutation_points", player.mutation_points - 200) is None and
+                                                                            powerup_sound.play() is not None and
+                                                                            setattr(self.buttons[~0], "label", f"DNA Points: {self.player.mutation_points}")
+                    ]
                 ),
                 Button(
-                    (100, 400, 600, 90),
+                    (100, 500, 700, 90),
                     color=(100, 100, 250),
-                    label="SLIPPERY_SLOBBER: run faster from danger (200)",
+                    label="REVERSE_TRANSCRIPTASE: get points from kills (300 DNA points)",
+                    on_click=[
+                        lambda _: None if player.mutation_points < 300 else player.mutations.__setitem__("REVERSE_TRANSCRIPTASE", True) is None and
+                                                                            setattr(player, "mutation_points", player.mutation_points - 300) is None and
+                                                                            powerup_sound.play() is not None and
+                                                                            setattr(self.buttons[~0], "label", f"DNA Points: {self.player.mutation_points}")
+                    ]
                 ),
                 Button(
-                    (100, 500, 600, 90),
-                    color=(100, 100, 250),
-                    label="REVERSE_TRANSCRIPTASE: get points for deaths (300)",
-                ),
-                Button(
-                    (100, 600, 600, 90),
+                    (100, 600, 700, 90),
                     color=(100, 100, 250),
                     label="EXIT",
+                    on_click=[lambda _: self.stop()]
+                ),
+                Button(
+                    (800, H - 100, 400, 90),
+                    color=BACKGROUND,
+                    label=f"DNA Points: {self.player.mutation_points}"
                 ),
             ]
         super().__init__(screen, clock, buttons)
@@ -213,8 +245,10 @@ class ShopMenu(Menu):
                 sys.exit()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 self.stop()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if self.buttons[0].rect.collidepoint(event.pos):
-                    if not self.player.mutations["ICE_SPIT"] and self.player.mutation_points > self.PRICES["ICE_SPIT"]:
-                        self.player.mutations["ICE_SPIT"] = True
-                        self.player.mutation_points -= self.PRICES["ICE_SPIT"]
+            for btn in self.buttons:
+                btn.handle_event(event)
+            # if event.type == pygame.MOUSEBUTTONDOWN:
+            #     if self.buttons[0].rect.collidepoint(event.pos):
+            #         if not self.player.mutations["ICE_SPIT"] and self.player.mutation_points > self.PRICES["ICE_SPIT"]:
+            #             self.player.mutations["ICE_SPIT"] = True
+            #             self.player.mutation_points -= self.PRICES["ICE_SPIT"]

@@ -81,7 +81,7 @@ class Game:
         enemy = self.enemies.check_player(self.player)
         if enemy is not None and not enemy.ded:
             # TODO: make this shit do something when you die and not just say L :kekw:
-            exit("Lost L GG (Get Good lmao)")
+            self.running = False
 
         for [enemy, surf, pos, vel, last_frame, type_, call] in self.bullets:
             pos += vel
@@ -106,6 +106,7 @@ class Game:
                     # add the enemy in the bullets lists
                     else:  # triggered only when the for loop didnt hit a break statement
                         if enemy is not None:
+                            attack_sound.play()
                             self.enemies.attack(enemy, self.player, self)
 
         self.player.handle_keys(keys)
@@ -165,6 +166,11 @@ class Game:
                 print(f"level {self.current_level} ended")
                 ShopMenu(self.screen, self.clock, self.player).loop()
                 self.current_level += 1
+                try:
+                    with open(PATHS.MAPS / f"level{self.current_level}.csv", "r") as f:
+                        pass
+                except Exception:
+                    self.running = False
                 self.initialize()
 
             self.frame_count += 1

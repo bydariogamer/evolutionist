@@ -78,6 +78,8 @@ class Collectables(List[List[int]]):
                     elif v == 5:
                         player.mutation_points += 3
                     self[i][j] = 0
+                    pickup_sound.set_volume(0.15)
+                    pickup_sound.play()
 
     def draw_elements(self, surface: pygame.surface.Surface):
         x, y = self.offset
