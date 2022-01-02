@@ -93,7 +93,7 @@ class Player(Mob):
             "SLIPPERY_SLOBBER": False,
             "REVERSE_TRANSCRIPTASE": False,
         }
-        self.mutation_points = 1000
+        self.mutation_points = 0
 
     def handle_keys(self, keys: Sequence[bool]):
         left = keys[pygame.K_a] or keys[pygame.K_LEFT]
