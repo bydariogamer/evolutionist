@@ -12,7 +12,7 @@ rand = random.random
 CHANCE_FOR_MOB = 0.97
 is_mob = (lambda: rand() > CHANCE_FOR_MOB)
 
-MAX_HEALTH = 1
+MAX_HEALTH = 3
 
 ATTACKS = {
     "electric": SpriteSheets.Bullets.electro,
@@ -93,7 +93,7 @@ class Player(Mob):
             "SLIPPERY_SLOBBER": False,
             "REVERSE_TRANSCRIPTASE": False,
         }
-        self.mutation_points = 0
+        self.mutation_points = 1000
 
     def handle_keys(self, keys: Sequence[bool]):
         left = keys[pygame.K_a] or keys[pygame.K_LEFT]
